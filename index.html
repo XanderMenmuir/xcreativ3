@@ -3084,13 +3084,7 @@ function closeMobileNav() {
         sessionStorage.setItem(savedPositionKey, track.scrollLeft);
       } catch (e) {}
     }
-    function restorePosition() {
-      try {
-        var saved = sessionStorage.getItem(savedPositionKey);
-        if (saved) jumpTo(parseFloat(saved));
-      } catch (e) {}
-    }
-    restorePosition();
+    // Position always resets to start on page load - don't restore previous position
     
     // DON'T reset on resize - just calculate new span for settling logic
     var lastSpan = itemSpan();
@@ -3098,11 +3092,6 @@ function closeMobileNav() {
       lastSpan = itemSpan();
     });
     
-    // Save position whenever it changes
-    track.addEventListener('scroll', function() {
-      savePosition();
-    }, { passive: true });
-
     var lastScrollLeft = track.scrollLeft;
     var manualSettleTimeout = null;
 
