@@ -3014,6 +3014,12 @@ function closeMobileNav() {
 
 // ── INFINITE CAROUSEL (reviews + selected projects) ──────────────────────────
 (function() {
+  // Clear saved carousel positions on page load so they always start fresh
+  try {
+    sessionStorage.removeItem('carousel_reviewsTrack');
+    sessionStorage.removeItem('carousel_csGrid');
+  } catch (e) {}
+
   function setupInfiniteCarousel(trackId, prevId, nextId, itemSelector) {
     var track = document.getElementById(trackId);
     var prevBtn = document.getElementById(prevId);
