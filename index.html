@@ -3245,10 +3245,10 @@ function closeMobileNav() {
       var target = getSnapTarget ? getSnapTarget(track.scrollLeft) : track.scrollLeft;
       track.style.scrollBehavior = 'smooth';
       track.scrollLeft = target;
-      // Safe to hand scroll-snap back now - it only engages on
-      // user-driven scroll gestures, so it won't fight this
-      // programmatic animation into the snap point.
-      track.style.scrollSnapType = prevSnapType;
+      // DON'T restore scroll-snap yet - keep it disabled while the
+      // smooth animation runs, otherwise the browser's snap will fight
+      // with the programmatic scroll. Let checkScrollStopped restore it
+      // after the animation finishes and position stabilizes.
 
       lastScrollLeft = track.scrollLeft;
       scrollStoppedCount = 0;
