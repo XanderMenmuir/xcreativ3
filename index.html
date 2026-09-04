@@ -3221,12 +3221,6 @@ function closeMobileNav() {
     track.style.webkitUserSelect = 'none';
   }
 
-  // Reset carousel scroll positions on page load to ensure they always start from the beginning
-  ['reviewsTrack', 'csGrid'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) el.scrollLeft = 0;
-  });
-
   setupInfiniteCarousel('reviewsTrack', 'revPrev', 'revNext', '.review-card');
   setupInfiniteCarousel('csGrid', 'csPrev', 'csNext', '.cs-card');
 
