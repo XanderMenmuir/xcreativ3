@@ -682,7 +682,7 @@ section { padding: 7rem 0; width: 100%; }
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   padding: 8px 30px 24px;
-  margin: 4rem 0 0;
+  margin: 4rem -30px 0;
   -ms-overflow-style: none;
   scrollbar-width: none;
   cursor: grab;
@@ -1344,7 +1344,6 @@ nav.scrolled {
 }
 .reviews-carousel {
   position: relative;
-  overflow: hidden;
 }
 .reviews-grid {
   display: flex;
@@ -1354,6 +1353,7 @@ nav.scrolled {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   padding: 8px 30px 24px;
+  margin: 0 -30px;
   -ms-overflow-style: none;
   scrollbar-width: none;
   cursor: grab;
@@ -1512,8 +1512,8 @@ nav.scrolled {
 
 @media (max-width: 768px) {
   .review-card { padding: 2rem 1.6rem; flex-basis: 280px; width: 280px; }
-  .reviews-grid { padding: 8px 16px 24px; margin: 0; }
-  .cs-grid { padding: 8px 16px 24px; margin: 4rem 0 0; }
+  .reviews-grid { padding: 8px 16px 24px; margin: 0 -16px; }
+  .cs-grid { padding: 8px 16px 24px; margin: 4rem -16px 0; }
 }
 
 /* MOBILE: center one slide at a time (reviews + selected projects) */
@@ -3207,7 +3207,7 @@ function closeMobileNav() {
       // Suppress just the click that follows this release, so letting go
       // over a card (e.g. a Behance link) doesn't also navigate.
       suppressClick = true;
-      setTimeout(function () { suppressClick = false; }, 50);
+      setTimeout(function () { suppressClick = false; }, 0);
     }
 
     document.addEventListener('click', function (e) {
@@ -3215,7 +3215,6 @@ function closeMobileNav() {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-        suppressClick = false;
       }
     }, true);
 
