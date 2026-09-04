@@ -3132,11 +3132,26 @@ function closeMobileNav() {
     // nearest card so a drag-release can snap to it explicitly (see
     // enableDragScroll: scroll-snap never gets a real scroll gesture to
     // react to during a manual drag, so it can't snap on its own).
+    // Account for the infinite carousel's clone buffer (n clones before,
+    // n after), so snapping works correctly throughout the safe zone.
     function nearestSnapLeft(current) {
       var span = itemSpan();
       if (!span) return current;
       var offset = startOffset();
-      var index = Math.round((current - offset) / span);
+      var groupWidth = n * span;
+      
+      // Normalize position within the safe "middle" group (the originals,
+      // not the clones at either end). The settle() function uses the same
+      // logic to wrap around.
+      var normalized = current;
+      if (current >= groupWidth * 1.5) {
+        normalized = current - groupWidth;
+      } else if (current < groupWidth * 0.5) {
+        normalized = current + groupWidth;
+      }
+      
+      // Find the nearest card within this normalized position
+      var index = Math.round((normalized - offset) / span);
       return index * span + offset;
     }
 
