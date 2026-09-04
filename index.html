@@ -903,10 +903,10 @@ footer {
   .nav-links { display: none; }
   .cs-card { flex-basis: 280px; width: 280px; }
   .cs-detail-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-  .services-strip-inner { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .packages-grid { grid-template-columns: 1fr; }
+  .services-strip-inner { grid-template-columns: 1fr; }
   .pkg-header { flex-direction: column; gap: 0.3rem; }
   .hero { padding: 0 1.25rem 5rem; }
   .hero-scroll { display: none; }
@@ -1517,7 +1517,7 @@ nav.scrolled {
 }
 
 /* MOBILE: center one slide at a time (reviews + selected projects) */
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .reviews-grid,
   .cs-grid {
     scroll-snap-type: x mandatory;
