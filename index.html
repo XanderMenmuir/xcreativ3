@@ -3128,14 +3128,26 @@ function closeMobileNav() {
     prevBtn.addEventListener('click', function() { navigate(-1); });
     nextBtn.addEventListener('click', function() { navigate(1); });
 
-    enableDragScroll(track, scheduleSettle);
+    // Given wherever the pointer left off, find the scrollLeft of the
+    // nearest card so a drag-release can snap to it explicitly (see
+    // enableDragScroll: scroll-snap never gets a real scroll gesture to
+    // react to during a manual drag, so it can't snap on its own).
+    function nearestSnapLeft(current) {
+      var span = itemSpan();
+      if (!span) return current;
+      var offset = startOffset();
+      var index = Math.round((current - offset) / span);
+      return index * span + offset;
+    }
+
+    enableDragScroll(track, scheduleSettle, nearestSnapLeft);
   }
 
   // Click-and-drag scrolling for native overflow-x carousels (Featured
   // Work, Reviews): drag left/right with the pointer held down, and it
   // releases cleanly on pointerup without also firing a click on
   // whatever card the pointer happens to land on (e.g. a Behance link).
-  function enableDragScroll(track, onDragEnd) {
+  function enableDragScroll(track, onDragEnd, getSnapTarget) {
     var isDown = false;
     var hasMoved = false;
     var suppressClick = false;
@@ -3179,7 +3191,8 @@ function closeMobileNav() {
     }
 
     function checkScrollStopped() {
-      // Check if scroll position has stabilized (momentum has finished)
+      // Check if scroll position has stabilized (the snap animation, or
+      // any leftover momentum, has finished)
       if (track.scrollLeft === lastScrollLeft) {
         scrollStoppedCount++;
         if (scrollStoppedCount >= 2) {
@@ -3202,9 +3215,26 @@ function closeMobileNav() {
       isDown = false;
       track.style.cursor = 'grab';
       pointerId = null;
-      if (!hasMoved) return; // plain click/tap - let it through normally
+      if (!hasMoved) {
+        // Plain click/tap, nothing was dragged - just hand scroll-snap
+        // straight back, no card was ever displaced.
+        track.style.scrollSnapType = prevSnapType;
+        track.style.scrollBehavior = prevScrollBehavior;
+        return;
+      }
 
-      // Keep scroll-snap disabled and check when momentum scroll finishes
+      // A manual drag never gives the browser a real scroll gesture to
+      // snap against, so re-enabling scroll-snap-type alone won't move
+      // anything - it'll just sit wherever the pointer let go. Instead,
+      // explicitly animate to the nearest card's snap position.
+      var target = getSnapTarget ? getSnapTarget(track.scrollLeft) : track.scrollLeft;
+      track.style.scrollBehavior = 'smooth';
+      track.scrollLeft = target;
+      // Safe to hand scroll-snap back now - it only engages on
+      // user-driven scroll gestures, so it won't fight this
+      // programmatic animation into the snap point.
+      track.style.scrollSnapType = prevSnapType;
+
       lastScrollLeft = track.scrollLeft;
       scrollStoppedCount = 0;
       checkScrollStopped();
