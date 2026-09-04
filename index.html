@@ -3121,7 +3121,7 @@ function closeMobileNav() {
 
     function scheduleSettle() {
       if (manualSettleTimeout) clearTimeout(manualSettleTimeout);
-      manualSettleTimeout = setTimeout(settle, 600);
+      manualSettleTimeout = setTimeout(settle, 200);
     }
 
     var navBusy = false;
@@ -3133,7 +3133,7 @@ function closeMobileNav() {
       navBusy = true;
       track.scrollBy({ left: direction * itemSpan(), behavior: 'smooth' });
       scheduleSettle();
-      setTimeout(function() { navBusy = false; }, 700);
+      setTimeout(function() { navBusy = false; }, 450);
     }
 
     prevBtn.addEventListener('click', function() { navigate(-1); });
@@ -3155,6 +3155,9 @@ function closeMobileNav() {
     var pointerId = null;
     var prevSnapType = '';
     var prevScrollBehavior = '';
+    var scrollCheckTimeout = null;
+    var lastScrollLeft = 0;
+    var scrollStoppedCount = 0;
 
     function onPointerDown(e) {
       if (e.button !== undefined && e.button !== 0) return;
@@ -3186,17 +3189,36 @@ function closeMobileNav() {
       if (e.cancelable) e.preventDefault();
     }
 
+    function checkScrollStopped() {
+      // Check if scroll position has stabilized (momentum has finished)
+      if (track.scrollLeft === lastScrollLeft) {
+        scrollStoppedCount++;
+        if (scrollStoppedCount >= 2) {
+          // Scroll has truly stopped, restore CSS and settle
+          clearTimeout(scrollCheckTimeout);
+          track.style.scrollSnapType = prevSnapType;
+          track.style.scrollBehavior = prevScrollBehavior;
+          if (onDragEnd) onDragEnd();
+          return;
+        }
+      } else {
+        scrollStoppedCount = 0;
+      }
+      lastScrollLeft = track.scrollLeft;
+      scrollCheckTimeout = setTimeout(checkScrollStopped, 50);
+    }
+
     function onPointerUp(e) {
       if (!isDown || (pointerId !== null && e.pointerId !== pointerId)) return;
       isDown = false;
       track.style.cursor = 'grab';
       pointerId = null;
-      track.style.scrollSnapType = prevSnapType;
-      track.style.scrollBehavior = prevScrollBehavior;
       if (!hasMoved) return; // plain click/tap - let it through normally
 
-      // Trigger settle after drag ends to handle infinite carousel wrapping
-      if (onDragEnd) onDragEnd();
+      // Keep scroll-snap disabled and check when momentum scroll finishes
+      lastScrollLeft = track.scrollLeft;
+      scrollStoppedCount = 0;
+      checkScrollStopped();
       
       // Suppress just the click that follows this release, so letting go
       // over a card (e.g. a Behance link) doesn't also navigate.
