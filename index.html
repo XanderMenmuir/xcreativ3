@@ -1345,6 +1345,14 @@ nav.scrolled {
 .reviews-carousel {
   position: relative;
 }
+
+/* Keep horizontal carousel overscroll inside the carousel. This prevents a
+   fast mobile swipe from handing momentum to the page while the infinite
+   carousel is also repositioning. */
+.reviews-grid,
+.cs-grid {
+  overscroll-behavior-x: contain;
+}
 .reviews-grid {
   display: flex;
   gap: 20px;
@@ -3014,7 +3022,7 @@ function closeMobileNav() {
 
 // ── INFINITE CAROUSEL (reviews + selected projects) ──────────────────────────
 (function() {
-  // Clear saved carousel positions on page load so they always start fresh
+  // Clear saved carousel positions on page load so they always start fresh.
   try {
     sessionStorage.removeItem('carousel_reviewsTrack');
     sessionStorage.removeItem('carousel_csGrid');
@@ -3030,17 +3038,18 @@ function closeMobileNav() {
     var n = originals.length;
     if (n < 2) return;
 
-    // Build [clone-before][originals][clone-after] so scrolling past either
-    // end reveals the next set seamlessly, then we silently snap back.
+    // Build [clone-before][originals][clone-after]. The carousel starts on
+    // the original set and silently moves back to the matching position only
+    // AFTER scrolling has actually finished. This is important on mobile:
+    // resetting scrollLeft during touch/momentum scrolling can briefly paint
+    // both the old and new positions, creating a ghost/duplicate flash.
     var cloneBefore = originals.map(function(el) { return el.cloneNode(true); });
     var cloneAfter = originals.map(function(el) { return el.cloneNode(true); });
     var firstOriginal = originals[0];
 
-    // Clones are duplicates of already-visible content, so mark them
-    // revealed immediately rather than waiting on the scroll observer
-    // (which only ever saw the originals).
     cloneBefore.concat(cloneAfter).forEach(function(el) {
       el.classList.add('revealed');
+      el.setAttribute('aria-hidden', 'true');
     });
 
     cloneBefore.forEach(function(el) { track.insertBefore(el, firstOriginal); });
@@ -3054,42 +3063,37 @@ function closeMobileNav() {
       return card.getBoundingClientRect().width + gap;
     }
 
-    var settling = false;
+    function startOffset() {
+      return parseFloat(getComputedStyle(track).paddingLeft) || 0;
+    }
 
-    // Jump the scroll position with NO animation, regardless of the
-    // track's CSS scroll-behavior. Setting scrollLeft directly still
-    // gets animated by `scroll-behavior: smooth`, which is what made
-    // the wrap-around reset visibly slide across the whole track. We
-    // force 'auto' for the jump, then restore 'smooth' afterwards so
-    // button clicks keep animating normally.
+    var settling = false;
+    var navBusy = false;
+    var scrollEndFallback = null;
+
+    // A wrap-around jump must be truly instantaneous. Temporarily overriding
+    // scroll-behavior also avoids a CSS smooth-scroll animation being applied
+    // to the reset itself.
     function jumpTo(value) {
       var prev = track.style.scrollBehavior;
       track.style.scrollBehavior = 'auto';
       track.scrollLeft = value;
-      // Force layout so the browser applies the 'auto' behavior before
-      // we hand control back / restore smooth scrolling.
       void track.offsetHeight;
       track.style.scrollBehavior = prev || '';
     }
 
-    function startOffset() {
-      // Account for the track's own left padding (added so card shadows
-      // aren't clipped) — scrollLeft 0 sits at the padding edge, not the
-      // first card, so the anchor point must include it.
-      return parseFloat(getComputedStyle(track).paddingLeft) || 0;
-    }
     function positionAtStart() {
       jumpTo(n * itemSpan() + startOffset());
     }
     positionAtStart();
-    
-    // Save the carousel position to sessionStorage so it persists when scrolling away
+
     var savedPositionKey = 'carousel_' + trackId;
     function savePosition() {
       try {
         sessionStorage.setItem(savedPositionKey, track.scrollLeft);
       } catch (e) {}
     }
+
     function restorePosition() {
       try {
         var saved = sessionStorage.getItem(savedPositionKey);
@@ -3097,62 +3101,86 @@ function closeMobileNav() {
       } catch (e) {}
     }
     restorePosition();
-    
-    // DON'T reset on resize - just calculate new span for settling logic
-    var lastSpan = itemSpan();
-    window.addEventListener('resize', function() {
-      lastSpan = itemSpan();
-    });
-    
-    // Save position whenever it changes
-    track.addEventListener('scroll', function() {
-      savePosition();
-    }, { passive: true });
 
-    var lastScrollLeft = track.scrollLeft;
-    var manualSettleTimeout = null;
+    // Keep the current position across navigation within the page.
+    track.addEventListener('scroll', savePosition, { passive: true });
 
     function settle() {
       if (settling) return;
-      settling = true;
+
       var span = itemSpan();
       var groupWidth = n * span;
-      if (track.scrollLeft >= groupWidth * 1.5) {
-        jumpTo(track.scrollLeft - groupWidth);
-      } else if (track.scrollLeft < groupWidth * 0.5) {
-        jumpTo(track.scrollLeft + groupWidth);
+      var x = track.scrollLeft;
+      var target = null;
+
+      if (x >= groupWidth * 1.5) {
+        target = x - groupWidth;
+      } else if (x < groupWidth * 0.5) {
+        target = x + groupWidth;
       }
-      settling = false;
+
+      if (target === null) return;
+
+      settling = true;
+      jumpTo(target);
+      // Let the browser finish applying the synchronous reset before another
+      // interaction can schedule a second reset.
+      requestAnimationFrame(function() {
+        settling = false;
+        savePosition();
+      });
     }
 
-    function scheduleSettle() {
-      if (manualSettleTimeout) clearTimeout(manualSettleTimeout);
-      manualSettleTimeout = setTimeout(settle, 200);
+    // Prefer the browser's scrollend event: unlike a fixed 200ms timeout, it
+    // fires after native touch/momentum scrolling has stopped. Older browsers
+    // get a conservative debounce fallback based on the last scroll event.
+    function scheduleSettleFallback() {
+      if (scrollEndFallback) clearTimeout(scrollEndFallback);
+      scrollEndFallback = setTimeout(function() {
+        scrollEndFallback = null;
+        settle();
+      }, 140);
     }
 
-    var navBusy = false;
+    if ('onscrollend' in window) {
+      track.addEventListener('scrollend', settle);
+    } else {
+      track.addEventListener('scroll', scheduleSettleFallback, { passive: true });
+    }
+
+    // DON'T reset on resize. The browser keeps the current scroll position;
+    // we simply use the current card dimensions whenever settling is needed.
+    window.addEventListener('resize', function() {});
+
     function navigate(direction) {
-      // Ignore clicks while a settle-jump or an existing smooth scroll
-      // is still resolving, so rapid clicking can't land mid-jump and
-      // produce a visible skip.
-      if (navBusy) return;
+      if (navBusy || settling) return;
       navBusy = true;
       track.scrollBy({ left: direction * itemSpan(), behavior: 'smooth' });
-      scheduleSettle();
-      setTimeout(function() { navBusy = false; }, 450);
+
+      // scrollend releases the lock on supported browsers. The fallback also
+      // handles browsers without scrollend and prevents rapid button clicks
+      // from colliding with an in-progress smooth scroll.
+      var release = function() {
+        navBusy = false;
+        track.removeEventListener('scrollend', release);
+      };
+      if ('onscrollend' in window) {
+        track.addEventListener('scrollend', release, { once: true });
+        setTimeout(release, 900);
+      } else {
+        setTimeout(function() { navBusy = false; }, 550);
+      }
     }
 
     prevBtn.addEventListener('click', function() { navigate(-1); });
     nextBtn.addEventListener('click', function() { navigate(1); });
 
-    enableDragScroll(track, scheduleSettle);
+    enableDragScroll(track);
   }
 
-  // Click-and-drag scrolling for native overflow-x carousels (Featured
-  // Work, Reviews): drag left/right with the pointer held down, and it
-  // releases cleanly on pointerup without also firing a click on
-  // whatever card the pointer happens to land on (e.g. a Behance link).
-  function enableDragScroll(track, onDragEnd) {
+  // Desktop pointer dragging. Touch scrolling remains native, so the phone's
+  // compositor handles momentum/snap without JavaScript fighting the gesture.
+  function enableDragScroll(track) {
     var isDown = false;
     var hasMoved = false;
     var suppressClick = false;
@@ -3163,23 +3191,21 @@ function closeMobileNav() {
     var prevScrollBehavior = '';
 
     function onPointerDown(e) {
+      // Leave touch pointers to native scrolling/momentum. JS pointer-dragging
+      // is only needed for mouse/pen input and was a source of mobile races.
+      if (e.pointerType === 'touch') return;
       if (e.button !== undefined && e.button !== 0) return;
+
       isDown = true;
       hasMoved = false;
       pointerId = e.pointerId;
       startX = e.clientX;
       startScrollLeft = track.scrollLeft;
       track.style.cursor = 'grabbing';
-      // Scroll-snap and smooth scroll-behavior otherwise fight a direct
-      // scrollLeft assignment (snapping it straight back), so suspend
-      // both for the duration of the drag and restore them on release.
       prevSnapType = track.style.scrollSnapType;
       prevScrollBehavior = track.style.scrollBehavior;
       track.style.scrollSnapType = 'none';
       track.style.scrollBehavior = 'auto';
-      // Stop the browser's native image drag-ghost from hijacking the
-      // gesture mid-way. (Not using setPointerCapture: it retargets the
-      // click that follows to the track itself, breaking card links.)
       if (e.cancelable) e.preventDefault();
     }
 
@@ -3199,18 +3225,14 @@ function closeMobileNav() {
       pointerId = null;
       track.style.scrollSnapType = prevSnapType;
       track.style.scrollBehavior = prevScrollBehavior;
-      if (!hasMoved) return; // plain click/tap - let it through normally
 
-      // Trigger settle after drag ends to handle infinite carousel wrapping
-      if (onDragEnd) onDragEnd();
-      
-      // Suppress just the click that follows this release, so letting go
-      // over a card (e.g. a Behance link) doesn't also navigate.
+      if (!hasMoved) return;
+
       suppressClick = true;
-      setTimeout(function () { suppressClick = false; }, 0);
+      setTimeout(function() { suppressClick = false; }, 0);
     }
 
-    document.addEventListener('click', function (e) {
+    document.addEventListener('click', function(e) {
       if (suppressClick && track.contains(e.target)) {
         e.preventDefault();
         e.stopPropagation();
@@ -3222,7 +3244,7 @@ function closeMobileNav() {
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerUp);
-    track.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    track.addEventListener('dragstart', function(e) { e.preventDefault(); });
     track.style.userSelect = 'none';
     track.style.webkitUserSelect = 'none';
   }
@@ -3230,10 +3252,8 @@ function closeMobileNav() {
   setupInfiniteCarousel('reviewsTrack', 'revPrev', 'revNext', '.review-card');
   setupInfiniteCarousel('csGrid', 'csPrev', 'csNext', '.cs-card');
 
-  // Horizontal scroll wheel support only, for mice with a left/right
-  // scroll wheel (or a trackpad's horizontal swipe), which report on
-  // deltaX. A plain up/down-only wheel reports purely on deltaY and is
-  // deliberately left alone here so normal page scrolling still works.
+  // Horizontal wheel support only. Vertical wheel/page scrolling is left to
+  // the browser so normal desktop scrolling remains unaffected.
   ['reviewsTrack', 'csGrid'].forEach(function(id) {
     var el = document.getElementById(id);
     if (!el) return;
