@@ -2708,25 +2708,16 @@ nav.scrolled {
           ></textarea>
         </div>
 
-        <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
-          <input 
-            type="checkbox" 
-            name="tos" 
-            id="tos"
-            required
-            style="margin-top: 0.25rem; cursor: pointer; accent-color: var(--red);"
-          >
-          <label for="tos" style="font-size: 0.85rem; color: var(--muted-dark); cursor: pointer; line-height: 1.4;">
-            I accept the <a href="terms-of-service.html" style="color: var(--red); text-decoration: none;">Terms of Service</a> and understand my information will be used to respond to my enquiry.
-          </label>
-        </div>
+        <p style="font-size: 0.8rem; color: var(--muted-dark); text-align: center; margin-bottom: 1.5rem;">
+          Your email client will open with your information pre-filled. By clicking the button, you acknowledge that you have read and accept our <a href="terms-of-service.html" style="color: var(--red); text-decoration: none;">Terms of Service</a> and consent to your information being used to respond to your enquiry.
+        </p>
 
         <button 
           type="submit"
           class="btn-primary"
           style="width: 100%; padding: 1rem; border: none; cursor: pointer;"
         >
-          Send Enquiry
+          Send Email Enquiry
         </button>
 
         <p style="font-size: 0.8rem; color: var(--muted-dark); text-align: center; margin-top: 1rem;">
@@ -2746,13 +2737,6 @@ nav.scrolled {
         const projectType = document.querySelector('select[name="project_type"]').value;
         const budget = document.querySelector('select[name="budget"]').value;
         const message = document.querySelector('textarea[name="message"]').value;
-        const tosChecked = document.querySelector('input[name="tos"]').checked;
-        
-        // Validate TOS checkbox
-        if (!tosChecked) {
-          alert('Please accept the Terms of Service to proceed.');
-          return;
-        }
         
         // Construct email body
         const emailBody = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nProject Type: ${projectType}\nBudget: ${budget}\n\nMessage:\n${message}`;
