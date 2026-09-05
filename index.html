@@ -2634,7 +2634,7 @@ nav.scrolled {
       <p class="reveal reveal-delay-2" style="color: var(--muted-dark); margin-top: 1rem;">Tell me about your vision, timeline, and budget. I'll get back to you as soon as possible.</p>
     </div>
 
-    <form action="https://formspree.io/f/maeybrep" method="POST" style="max-width: 600px; margin: 0 auto;">
+    <form id="enquiryForm" style="max-width: 600px; margin: 0 auto;">
       <div style="display: grid; gap: 1.5rem;">
         
         <div>
@@ -2734,6 +2734,36 @@ nav.scrolled {
         </p>
       </div>
     </form>
+
+    <script>
+      document.getElementById('enquiryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const name = document.querySelector('input[name="name"]').value;
+        const email = document.querySelector('input[name="email"]').value;
+        const phone = document.querySelector('input[name="phone"]').value;
+        const projectType = document.querySelector('select[name="project_type"]').value;
+        const budget = document.querySelector('select[name="budget"]').value;
+        const message = document.querySelector('textarea[name="message"]').value;
+        const tosChecked = document.querySelector('input[name="tos"]').checked;
+        
+        // Validate TOS checkbox
+        if (!tosChecked) {
+          alert('Please accept the Terms of Service to proceed.');
+          return;
+        }
+        
+        // Construct email body
+        const emailBody = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nProject Type: ${projectType}\nBudget: ${budget}\n\nMessage:\n${message}`;
+        
+        // Construct mailto URL
+        const mailtoLink = `mailto:xcreativ3@gmail.com?subject=New%20Project%20Enquiry%20from%20${encodeURIComponent(name)}&body=${encodeURIComponent(emailBody)}`;
+        
+        // Open email client
+        window.location.href = mailtoLink;
+      });
+    </script>
   </div>
 </section>
 
