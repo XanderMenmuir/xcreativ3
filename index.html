@@ -729,6 +729,41 @@ section { padding: 7rem 0; width: 100%; }
   border-color: rgba(180,0,13,0.26);
   box-shadow: 0 24px 54px rgba(0,0,0,0.2);
 }
+/* Clickable hint line (matches reviews rating line) */
+.cs-hint {
+  font-size: 0.85rem;
+  color: var(--muted-dark);
+  margin-top: 0.6rem;
+  text-align: center;
+  text-wrap: balance;
+  padding: 0 1rem;
+}
+.cs-hint svg { display: inline-block; vertical-align: -1px; margin-left: 0.25rem; }
+.cs-hint strong { color: inherit; font-weight: inherit; }
+.cs-hint svg { color: var(--red); flex-shrink: 0; }
+.cs-hint-bottom { margin-top: 2.5rem; }
+.cs-hint-touch { display: none; }
+@media (hover: none) {
+  .cs-hint > strong { display: none; }
+  .cs-hint-touch { display: inline; }
+}
+/* Corner arrow badge on each card image */
+.cs-card-img { position: relative; }
+.cs-card-img::after {
+  content: '';
+  position: absolute; top: 12px; right: 12px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(10,10,10,0.62) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7M8 7h9v9'/%3E%3C/svg%3E") center / 16px no-repeat;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+  pointer-events: none;
+}
+.cs-card:hover .cs-card-img::after {
+  background-color: var(--red);
+  border-color: var(--red);
+  transform: translate(2px, -2px);
+}
 .cs-card-img {
   width: 100%; aspect-ratio: 16/10;
   overflow: hidden;
@@ -1045,13 +1080,24 @@ nav.scrolled {
   .process-steps-row { grid-template-columns: 1fr; gap: 2.4rem; }
 }
 
+/* Disclaimer under image marquee */
+.img-marquee-note {
+  background: var(--black);
+  padding: 1.6rem 1.5rem 1.8rem;
+  border-bottom: 1px solid var(--border-dark);
+  text-align: center;
+}
+.img-marquee-note p {
+  font-size: 0.78rem; color: var(--muted-dark);
+  font-style: italic; line-height: 1.6;
+  max-width: 520px; margin: 0 auto;
+}
 /* IMAGE MARQUEE STRIP */
 .img-marquee-strip {
   overflow: hidden;
   padding: 2rem 0;
   background: var(--black);
   border-top: 1px solid var(--border-dark);
-  border-bottom: 1px solid var(--border-dark);
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
@@ -1852,6 +1898,9 @@ nav.scrolled {
      <div class="img-marquee-item" onclick="openLightbox(this.querySelector('img'))"><img src="https://lh3.googleusercontent.com/d/1ALFnBXmia_6LRSgJY1-8PyTyIpJshONd" alt="Wangara Aurum Energy | Logo &amp; Brand Identity" width="400" height="300" loading="lazy" /></div>
   </div>
 </div>
+<div class="img-marquee-note">
+  <p class="reveal">Includes projects from Woww Digital &amp; xcreativ3.<br>All designed, led and delivered by me, start to finish.</p>
+</div>
 
 <!-- SLOTS BANNER -->
 <div class="slots-banner">
@@ -2299,7 +2348,7 @@ nav.scrolled {
 <!-- CASE STUDIES -->
 <section class="case-studies" id="case-studies">
 <div class="inner">
-  <div class="case-studies-header" style="justify-content:center; text-align:center; flex-direction:column; align-items:center;">
+  <div class="case-studies-header" style="display:block; text-align:center;">
     <div>
       <p class="section-label reveal" style="justify-content:center;">Featured Work</p>
       <h2 class="section-title reveal reveal-delay-1">Take a <span class="accent">Closer Look</span></h2>
@@ -2430,12 +2479,8 @@ nav.scrolled {
     </button>
   </div>
 
-  <div style="text-align:center; margin-top:3rem;">
-    <a href="https://www.behance.net/xandermenmuir" target="_blank" rel="noopener noreferrer" class="btn-ghost-light reveal" style="display:inline-flex; justify-content:center;">
-      View all on Behance
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-  </div>
+  <p class="cs-hint cs-hint-bottom reveal"><strong>Click</strong><span class="cs-hint-touch"><strong>Tap</strong></span> any project to view the full case study on <span style="white-space:nowrap;">Behance <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></p>
+
 </div><!-- /.inner -->
 </section>
 
