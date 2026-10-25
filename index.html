@@ -742,6 +742,10 @@ section { padding: 7rem 0; width: 100%; }
 .cs-hint strong { color: inherit; font-weight: inherit; }
 .cs-hint svg { color: var(--red); flex-shrink: 0; }
 .cs-hint-bottom { margin-top: 2.5rem; }
+.cs-hint-link { color: inherit; font-weight: 600; text-decoration: none; transition: color .2s ease; }
+.cs-hint-link:hover, .cs-hint-link:focus-visible { color: var(--red); }
+.cs-hint-link svg { transition: transform .2s ease; }
+.cs-hint-link:hover svg, .cs-hint-link:focus-visible svg { transform: translate(2px,-2px); }
 .cs-hint-touch { display: none; }
 @media (hover: none) {
   .cs-hint > strong { display: none; }
@@ -2479,7 +2483,7 @@ nav.scrolled {
     </button>
   </div>
 
-  <p class="cs-hint cs-hint-bottom reveal"><strong>Click</strong><span class="cs-hint-touch"><strong>Tap</strong></span> any project to view the full case study on <span style="white-space:nowrap;">Behance <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span></p>
+  <p class="cs-hint cs-hint-bottom reveal"><strong>Click</strong><span class="cs-hint-touch"><strong>Tap</strong></span> any project to view the full case study on <a class="cs-hint-link" href="https://www.behance.net/xandermenmuir" target="_blank" rel="noopener noreferrer" style="white-space:nowrap;">Behance <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a></p>
 
 </div><!-- /.inner -->
 </section>
