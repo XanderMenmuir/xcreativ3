@@ -757,11 +757,12 @@ section { padding: 7rem 0; width: 100%; }
 .calc-min {
   display: none; position: absolute; top: 0.55rem; right: 0.6rem;
   width: 34px; height: 34px; border-radius: 50%; cursor: pointer; place-items: center;
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); color: var(--white);
+  background: var(--red); border: 1px solid var(--red); color: var(--white);
+  box-shadow: 0 4px 14px rgba(180,0,13,0.45);
   transition: background 0.2s, transform 0.3s;
 }
 .calc-min svg { width: 16px; height: 16px; }
-.calc-min:hover { background: var(--red); border-color: var(--red); }
+.calc-min:hover { background: var(--red-dark); border-color: var(--red-dark); }
 .calc-summary.min .calc-min { transform: rotate(180deg); }
 .calc-summary { position: sticky; }
 
@@ -4107,22 +4108,36 @@ function closeMobileNav() {
   var incBody = document.getElementById('incBody');
   var incClose = document.getElementById('incClose');
   var incLastFocus = null;
+  // Back-button support: one history entry is shared by whichever popup is open
+  var layerPushed = false;
+  function pushLayer() {
+    if (layerPushed) return;
+    history.pushState({ popupLayer: 1 }, '');
+    layerPushed = true;
+  }
+  function popLayer() {
+    if (!layerPushed) return;
+    layerPushed = false;
+    history.back();
+  }
   function openInc(id, tagline) {
     var pk = PACKAGES.filter(function(x) { return x.id === id; })[0];
     if (!pk) return;
     incLastFocus = document.activeElement;
     incBody.innerHTML = buildInc(pk, tagline);
+    pushLayer();
     incModal.classList.add('open');
     incModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     incModal.scrollTop = 0;
     setTimeout(function() { incClose.focus({ preventScroll: true }); }, 60);
   }
-  function closeInc(restore) {
+  function closeInc(restore, keepHistory) {
     if (!incModal.classList.contains('open')) return;
     incModal.classList.remove('open');
     incModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    if (!keepHistory) popLayer();
     if (restore !== false && incLastFocus && incLastFocus.focus) incLastFocus.focus({ preventScroll: true });
   }
   document.addEventListener('click', function(e) {
@@ -4135,7 +4150,7 @@ function closeMobileNav() {
   });
   // capture phase: close this popup before the calculator opens from its "Customise" button
   document.addEventListener('click', function(e) {
-    if (e.target.closest('#incModal [data-open-calc]')) closeInc(false);
+    if (e.target.closest('#incModal [data-open-calc]')) closeInc(false, true);
   }, true);
   incClose.addEventListener('click', function() { closeInc(); });
   document.addEventListener('keydown', function(e) {
@@ -4191,23 +4206,32 @@ function closeMobileNav() {
       if (pk) { state = normalize(clone(pk.pick)); guideStash = null; sync(true); }
     }
     setMin(mobileMq.matches);
+    pushLayer();
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     modal.scrollTop = 0;
     setTimeout(function() { closeBtn.focus({ preventScroll: true }); }, 60);
   }
-  function closeCalc() {
+  function closeCalc(keepHistory) {
+    if (!modal.classList.contains('open')) return;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    if (keepHistory !== true) popLayer();
     if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
   document.addEventListener('click', function(e) {
     var t = e.target.closest('[data-open-calc]');
     if (t) openCalc(t.dataset.pkg);
   });
-  closeBtn.addEventListener('click', closeCalc);
+  closeBtn.addEventListener('click', function() { closeCalc(); });
+  // phone back button / browser back: close the open popup instead of leaving the site
+  window.addEventListener('popstate', function() {
+    layerPushed = false;
+    closeInc(true, true);
+    closeCalc(true);
+  });
   document.addEventListener('keydown', function(e) {
     if (!modal.classList.contains('open')) return;
     if (e.key === 'Escape') { closeCalc(); return; }
