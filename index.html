@@ -551,6 +551,365 @@ section { padding: 7rem 0; width: 100%; }
 }
 .pkg-card:hover .pkg-card-img img { transform: scale(1.04); }
 
+
+/* CUSTOM PACKAGE CARD + CALCULATOR MODAL */
+.pkg-card.pkg-custom {
+  grid-column: 1 / -1;
+  background: var(--black);
+  border-color: rgba(255,255,255,0.1);
+  box-shadow: 0 18px 38px rgba(10,10,10,0.18);
+  cursor: pointer;
+}
+.pkg-card.pkg-custom:hover { border-color: rgba(180,0,13,0.7); box-shadow: 0 24px 54px rgba(10,10,10,0.3); }
+.pkg-custom-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+.pkg-custom .pkg-name { color: var(--white); }
+.pkg-custom .pkg-tagline { color: var(--muted-dark); }
+.pkg-custom .pkg-divider { background: var(--border-dark); }
+.pkg-custom .pkg-actions { padding-top: 0.4rem; margin-top: 0; }
+.pkg-card.pkg-custom .pkg-cta.calc-open {
+  width: auto; min-width: 260px; padding: 0.95rem 2rem;
+  background: var(--red); border-color: var(--red); color: var(--white);
+}
+.pkg-card.pkg-custom .pkg-cta.calc-open:hover { background: var(--red-dark); border-color: var(--red-dark); color: var(--white); }
+.pkg-custom-chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; }
+.pkg-chip {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.45rem; border-radius: 999px;
+  border: 1px solid var(--border-dark); background: var(--card-dark);
+  font-size: 0.72rem; font-weight: 500; color: var(--grey); line-height: 1.2;
+}
+.pkg-chip .calc-ico { width: 30px; height: 30px; background: rgba(180,0,13,0.18); color: #ff4d5a; }
+.pkg-chip .calc-ico svg { width: 15px; height: 15px; }
+
+.calc-modal {
+  position: fixed; inset: 0; z-index: 1500;
+  background: radial-gradient(circle at 50% 0%, rgba(180,0,13,0.14) 0%, transparent 42%), var(--black);
+  overflow-y: auto; overscroll-behavior: contain;
+  opacity: 0; visibility: hidden; transform: translateY(18px);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
+}
+.calc-modal.open { opacity: 1; visibility: visible; transform: none; }
+.calc-close {
+  position: fixed; top: 1.25rem; right: 1.5rem; z-index: 3;
+  display: flex; align-items: center; gap: 0.6rem; cursor: pointer;
+  padding: 0.6rem 1.1rem 0.6rem 0.9rem; border-radius: 999px;
+  font-family: 'Montserrat', sans-serif; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+  color: var(--white); background: rgba(24,24,24,0.9); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.18); transition: all 0.25s;
+}
+.calc-close svg { width: 14px; height: 14px; }
+.calc-close:hover { background: var(--red); border-color: var(--red); }
+
+.pkg-calc {
+  max-width: 1100px; margin: 0 auto; color: var(--white); text-align: left;
+  padding: 5.5rem clamp(1.25rem, 5%, 4rem) 2rem;
+}
+.calc-head { text-align: center; max-width: 640px; margin: 0 auto 2rem; }
+.calc-eyebrow {
+  display: inline-block; font-size: 0.57rem; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.26rem 0.75rem; background: var(--red); color: var(--white);
+  font-weight: 700; border-radius: 999px; margin-bottom: 1.1rem;
+}
+.calc-title { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 600; letter-spacing: -0.02em; color: var(--white); line-height: 1.15; margin-bottom: 0.8rem; }
+.calc-title span { color: var(--red); }
+.calc-sub { font-size: 0.85rem; color: var(--muted-dark); line-height: 1.75; }
+
+.calc-presets { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-bottom: 2.4rem; }
+.calc-preset {
+  font-family: 'Montserrat', sans-serif; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 0.1rem;
+  padding: 0.7rem 1.4rem; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.16); background: transparent; color: var(--white);
+  transition: all 0.25s ease;
+}
+.calc-preset b { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
+.calc-preset small { font-size: 0.72rem; color: var(--muted-dark); font-weight: 500; transition: color 0.25s; }
+.calc-preset:hover { border-color: var(--white); }
+.calc-preset.active { background: var(--red); border-color: var(--red); }
+.calc-preset.active small { color: rgba(255,255,255,0.82); }
+
+.calc-group-title {
+  display: flex; align-items: center; gap: 1rem;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #ff4d5a; margin: 0 0 1.1rem;
+}
+.calc-group-title::after { content: ''; flex: 1; height: 1px; background: var(--border-dark); }
+.calc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 2.2rem; }
+.calc-sec {
+  border: 1px solid var(--border-dark); border-radius: 22px;
+  padding: 1.3rem 1.3rem 1.1rem; background: var(--card-dark);
+  transition: border-color 0.3s;
+}
+.calc-sec:hover { border-color: rgba(180,0,13,0.45); }
+.calc-sec-head { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+.calc-ico {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  display: grid; place-items: center;
+  background: rgba(180,0,13,0.18); color: #ff4d5a;
+}
+.calc-ico svg { width: 18px; height: 18px; }
+.calc-sec-name { flex: 1; font-size: 0.9rem; font-weight: 600; color: var(--white); line-height: 1.25; }
+.calc-sec-hint { display: block; font-size: 0.66rem; font-weight: 400; color: var(--muted-dark); margin-top: 0.15rem; }
+.calc-all {
+  font-family: 'Montserrat', sans-serif; font-size: 0.66rem; font-weight: 600; color: #ff4d5a;
+  background: none; border: none; padding: 0; margin-left: 0.4rem; cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+}
+.calc-all:hover { color: var(--white); }
+.calc-sec-price { font-size: 0.95rem; font-weight: 700; color: #ff4d5a; white-space: nowrap; transition: transform 0.25s; }
+.calc-sec-price.bump { transform: scale(1.12); }
+.calc-opts { display: grid; gap: 0.45rem; }
+.calc-opt { position: relative; display: block; cursor: pointer; }
+.calc-opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.calc-opt-body {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.65rem 0.9rem; border-radius: 14px;
+  border: 1px solid var(--border-dark); background: transparent;
+  transition: all 0.2s ease;
+}
+.calc-radio {
+  width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.35); position: relative; transition: all 0.2s;
+}
+.calc-radio::after {
+  content: ''; position: absolute; inset: 2px; border-radius: 50%;
+  background: var(--white); transform: scale(0); transition: transform 0.2s;
+}
+.calc-radio.calc-check { border-radius: 4px; }
+.calc-radio.calc-check::after {
+  inset: 0; border-radius: 0; background: none;
+  border: solid var(--white); border-width: 0 2px 2px 0;
+  width: 4px; height: 8px; margin: auto; top: 0; left: 0; right: 0; bottom: 1px;
+  transform: rotate(45deg) scale(0);
+}
+.calc-opt-text { flex: 1; min-width: 0; }
+.calc-opt-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--white); line-height: 1.3; }
+.calc-opt-detail { display: block; font-size: 0.7rem; color: var(--muted-dark); line-height: 1.4; margin-top: 0.1rem; }
+.calc-opt-price { font-size: 0.74rem; font-weight: 600; color: var(--muted-dark); white-space: nowrap; }
+.calc-opt:hover .calc-opt-body { border-color: rgba(255,255,255,0.35); }
+.calc-opt input:focus-visible + .calc-opt-body { outline: 2px solid #ff4d5a; outline-offset: 2px; }
+.calc-opt input:checked + .calc-opt-body { border-color: var(--red); background: rgba(180,0,13,0.16); }
+.calc-opt input:checked + .calc-opt-body .calc-radio { background: var(--red); border-color: var(--red); }
+.calc-opt input:checked + .calc-opt-body .calc-radio::after { transform: scale(1); }
+.calc-opt input:checked + .calc-opt-body .calc-radio.calc-check::after { transform: rotate(45deg) scale(1); }
+.calc-opt input:checked + .calc-opt-body .calc-opt-price { color: #ff4d5a; }
+
+.calc-summary {
+  position: sticky; bottom: 1.25rem; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  background: rgba(28,28,28,0.96); backdrop-filter: blur(14px); color: var(--white);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 24px; padding: 1.3rem 1.7rem;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.6);
+}
+.calc-total-label { font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-dark); font-weight: 600; }
+.calc-total { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.calc-status { font-size: 0.74rem; color: var(--muted-dark); margin-top: 0.2rem; line-height: 1.5; }
+.calc-status.match { color: #fff; }
+.calc-status.match::before {
+  content: '\2713'; display: inline-grid; place-items: center; width: 16px; height: 16px;
+  background: var(--red); border-radius: 50%; font-size: 0.55rem; margin-right: 0.45rem; vertical-align: 1px;
+}
+.calc-summary .pkg-cta { width: auto; min-width: 220px; padding: 0.9rem 1.8rem; border-color: var(--red); color: var(--white); background: var(--red); }
+.calc-summary .pkg-cta:hover { background: var(--red-dark); border-color: var(--red-dark); color: var(--white); }
+.calc-note { text-align: center; font-size: 0.68rem; color: var(--muted-dark); margin: 1.2rem 0 1rem; }
+
+@media (max-width: 900px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .pkg-custom-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+@media (max-width: 600px) {
+  .pkg-custom-chips { grid-template-columns: 1fr 1fr; }
+  .pkg-chip { font-size: 0.66rem; }
+  .pkg-card.pkg-custom .pkg-cta.calc-open { width: 100%; min-width: 0; }
+  .calc-close { top: 0.9rem; right: 0.9rem; }
+  .pkg-calc { padding-top: 5rem; }
+  .calc-presets { display: grid; grid-template-columns: 1fr 1fr; }
+  .calc-preset { border-radius: 18px; }
+  .calc-summary { padding: 1.1rem 1.25rem; bottom: 0.75rem; }
+  .calc-summary .pkg-cta { width: 100%; }
+  .calc-total { font-size: 1.7rem; }
+}
+
+
+/* builder additions */
+.pkg-custom-side { display: flex; flex-direction: column; gap: 0.75rem; }
+.pkg-custom-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-dark); }
+.pkg-custom-pkgs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.55rem; margin-bottom: 0.7rem; }
+.pkg-mini {
+  font-family: 'Montserrat', sans-serif; cursor: pointer; text-align: left;
+  display: flex; flex-direction: column; gap: 0.15rem; padding: 0.75rem 0.9rem;
+  border-radius: 16px; border: 1px solid var(--border-dark); background: var(--card-dark); color: var(--white);
+  transition: all 0.25s ease;
+}
+.pkg-mini b { font-size: 0.64rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+.pkg-mini small { font-size: 0.78rem; font-weight: 700; color: #ff4d5a; }
+.pkg-mini:hover { border-color: var(--red); background: rgba(180,0,13,0.14); }
+.calc-presets-label { text-align: center; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-dark); margin-bottom: 0.9rem; }
+.calc-group-note { font-weight: 500; letter-spacing: 0.06em; color: var(--muted-dark); text-transform: none; font-size: 0.7rem; }
+.calc-group-intro { font-size: 0.78rem; color: var(--muted-dark); line-height: 1.7; margin: -0.4rem 0 1.1rem; max-width: 760px; }
+.calc-opt-tag {
+  display: inline-block; margin-left: 0.5rem; padding: 0.1rem 0.5rem; border-radius: 999px; vertical-align: 1px;
+  font-size: 0.54rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  background: rgba(255,255,255,0.1); color: var(--muted-dark); display: none;
+}
+.calc-opt-locked .calc-opt-tag { display: inline-block; }
+.calc-opt-locked, .calc-opt-locked input { cursor: not-allowed; }
+.calc-min {
+  display: none; position: absolute; top: 0.55rem; right: 0.6rem;
+  width: 34px; height: 34px; border-radius: 50%; cursor: pointer; place-items: center;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); color: var(--white);
+  transition: background 0.2s, transform 0.3s;
+}
+.calc-min svg { width: 16px; height: 16px; }
+.calc-min:hover { background: var(--red); border-color: var(--red); }
+.calc-summary.min .calc-min { transform: rotate(180deg); }
+.calc-summary { position: sticky; }
+
+@media (max-width: 900px) {
+  .pkg-custom-pkgs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .calc-min { display: grid; }
+  .calc-summary { padding-right: 3.6rem; }
+  .calc-summary.min { padding: 0.55rem 3.6rem 0.55rem 1.1rem; flex-wrap: nowrap; border-radius: 999px; min-height: 52px; }
+  .calc-summary.min > div { display: flex; align-items: baseline; gap: 0.7rem; }
+  .calc-summary.min .calc-status,
+  .calc-summary.min .pkg-cta { display: none; }
+  .calc-summary.min .calc-total { font-size: 1.25rem; }
+  .calc-summary.min .calc-min { top: 50%; margin-top: -17px; }
+}
+
+/* merged logo card */
+.calc-sec-wide { grid-column: 1 / -1; }
+.calc-parts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem; }
+.calc-part-label {
+  display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.7rem;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-dark);
+}
+.calc-part-label span {
+  display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(180,0,13,0.2); color: #ff4d5a; font-size: 0.6rem; letter-spacing: 0;
+}
+.calc-part-opt { font-style: normal; font-weight: 500; letter-spacing: 0.06em; text-transform: none; font-size: 0.66rem; color: var(--muted-dark); margin-left: 0.2rem; }
+.calc-part-opt::before { content: '\00b7  '; }
+@media (max-width: 900px) { .calc-parts { grid-template-columns: 1fr; gap: 1.2rem; } }
+
+/* brand guide switch */
+.calc-guide-toggle {
+  display: flex; align-items: center; gap: 1rem; cursor: pointer; position: relative;
+  padding: 1.1rem 1.3rem; margin: 0 0 1rem; border-radius: 22px;
+  background: var(--card-dark); border: 1px solid var(--border-dark); transition: border-color 0.25s;
+}
+.calc-guide-toggle:hover { border-color: rgba(180,0,13,0.5); }
+.calc-guide-toggle input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.calc-switch {
+  flex-shrink: 0; width: 46px; height: 26px; border-radius: 999px; position: relative;
+  background: rgba(255,255,255,0.16); transition: background 0.25s;
+}
+.calc-switch::after {
+  content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--white); transition: transform 0.25s;
+}
+.calc-guide-toggle input:checked ~ .calc-switch { background: var(--red); }
+.calc-guide-toggle input:checked ~ .calc-switch::after { transform: translateX(20px); }
+.calc-guide-toggle input:focus-visible ~ .calc-switch { outline: 2px solid #ff4d5a; outline-offset: 3px; }
+.calc-guide-text { flex: 1; min-width: 0; }
+.calc-guide-text b { display: block; font-size: 0.92rem; font-weight: 600; color: var(--white); }
+.calc-guide-text small { display: block; font-size: 0.72rem; color: var(--muted-dark); line-height: 1.55; margin-top: 0.2rem; }
+.calc-guide-price { font-size: 0.74rem; font-weight: 600; color: #ff4d5a; white-space: nowrap; }
+.calc-sec-off { opacity: 0.35; pointer-events: none; filter: grayscale(1); }
+.calc-all:disabled { cursor: default; }
+@media (max-width: 600px) { .calc-guide-toggle { flex-wrap: wrap; } .calc-guide-price { width: 100%; padding-left: 62px; } }
+
+/* packages callout: compact black button that opens the calculator */
+.packages-callout {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; gap: 1rem; max-width: 100%;
+  margin: 2rem 0 0; padding: 0.5rem 0.5rem 0.5rem 0.55rem; text-align: center;
+  font-family: 'Montserrat', sans-serif; cursor: pointer; color: var(--white);
+  background: linear-gradient(180deg, #202020 0%, #0a0a0a 100%);
+  border: 1px solid rgba(255,255,255,0.14); border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 14px 30px rgba(10,10,10,0.3);
+  animation: calloutGlow 2.6s ease-out infinite;
+  transition: opacity 0.8s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+@keyframes calloutGlow {
+  0% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 14px 30px rgba(10,10,10,0.3), 0 0 0 0 rgba(180,0,13,0.55); }
+  70%, 100% { box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 14px 30px rgba(10,10,10,0.3), 0 0 0 18px rgba(180,0,13,0); }
+}
+/* a soft light sweep across the button */
+.packages-callout::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.13) 50%, transparent 65%);
+  transform: translateX(-130%); animation: calloutSweep 4.5s ease-in-out infinite;
+}
+@keyframes calloutSweep { 0%, 55% { transform: translateX(-130%); } 100% { transform: translateX(130%); } }
+.packages-callout:hover { border-color: rgba(255,255,255,0.28); transform: translateY(-2px); }
+.packages-callout:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+.packages-callout-arrow {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center; color: var(--white);
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16);
+  transition: background 0.25s, border-color 0.25s;
+}
+.packages-callout-arrow svg { width: 17px; height: 17px; transition: transform 0.3s ease; }
+.packages-callout:hover .packages-callout-arrow { background: var(--red); border-color: var(--red); }
+.packages-callout:hover .packages-callout-arrow svg { transform: translateX(2px); }
+.packages-callout-text { font-size: 0.92rem; font-weight: 700; line-height: 1.4; letter-spacing: 0.01em; color: var(--white); padding: 0 0.2rem; }
+.packages-callout-cta {
+  flex-shrink: 0; padding: 0.85rem 1.4rem; border-radius: 999px; color: var(--white);
+  background: linear-gradient(180deg, #d1101f 0%, var(--red) 100%);
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  box-shadow: 0 6px 16px rgba(180,0,13,0.45); transition: filter 0.25s, box-shadow 0.25s;
+}
+.packages-callout:hover .packages-callout-cta { filter: brightness(1.12); box-shadow: 0 8px 20px rgba(180,0,13,0.55); }
+@media (max-width: 600px) {
+  .packages-callout { display: flex; flex-wrap: wrap; justify-content: center; border-radius: 26px; padding: 1rem; gap: 0.85rem; margin-top: 1.6rem; width: 100%; }
+  .packages-callout-arrow { display: none; }
+  .packages-callout-text { flex-basis: 100%; font-size: 0.88rem; }
+  .packages-callout-cta { width: 100%; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .packages-callout, .packages-callout::after { animation: none; }
+}
+
+
+
+/* "What's included" popup */
+.pkg-view {
+  display: inline-flex; align-items: center; gap: 0.6rem; cursor: pointer;
+  font-family: 'Montserrat', sans-serif; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--light-text); background: transparent; border: 1px solid rgba(0,0,0,0.18);
+  border-radius: 999px; padding: 0.7rem 1.2rem; transition: all 0.25s ease;
+}
+.pkg-view svg { transition: transform 0.25s ease; }
+.pkg-view:hover { background: var(--red); border-color: var(--red); color: var(--white); }
+.pkg-view:hover svg { transform: translateX(3px); }
+.inc-price { font-size: 1.1rem; font-weight: 700; color: #ff4d5a; margin-top: 0.7rem; }
+.inc-list { list-style: none; display: grid; gap: 0.55rem; }
+.inc-list li {
+  display: flex; align-items: flex-start; gap: 0.7rem;
+  font-size: 0.8rem; line-height: 1.5; color: var(--grey);
+}
+.inc-list li::before {
+  content: ''; flex-shrink: 0; width: 14px; height: 14px; margin-top: 0.15rem; border-radius: 50%;
+  background: var(--red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center / 9px no-repeat;
+}
+.inc-foot { display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 0.4rem 0 1rem; }
+.inc-foot .btn-primary { text-align: center; }
+.inc-foot .inc-ghost {
+  font-family: 'Montserrat', sans-serif; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+  color: var(--white); background: transparent; border: 1px solid rgba(255,255,255,0.25);
+  padding: 0.95rem 2rem; cursor: pointer; transition: all 0.25s;
+}
+.inc-foot .inc-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.08); }
+@media (max-width: 600px) { .inc-foot .btn-primary, .inc-foot .inc-ghost { width: 100%; } }
+
+/* logo card columns */
+.calc-col { display: flex; flex-direction: column; gap: 1.4rem; min-width: 0; }
+
+@media (max-width: 600px) { .calc-preset-custom { grid-column: 1 / -1; } }
+
 /* STONE BREAK */
 .stone-break {
   position: relative;
@@ -1930,7 +2289,8 @@ nav.scrolled {
     <div style="max-width:720px; text-align:center;">
       <p class="section-label reveal" style="justify-content:center;">Logo & Identity Packages</p>
       <h2 class="section-title reveal reveal-delay-1" style="color:var(--light-text);">Choose <span class="accent">Your Package</span></h2>
-      <p class="packages-intro reveal reveal-delay-2">Whether you're launching a new business, building a brand from the ground up, or ready to rebrand, get a professional logo and complete brand identity designed to help you launch with confidence.</p>    </div>
+      <p class="packages-intro reveal reveal-delay-2">Whether you're launching a new business, building a brand from the ground up, or ready to rebrand, get a professional logo and complete brand identity designed to help you launch with confidence.</p>
+    </div>
   </div>
   <div class="packages-grid">
 
@@ -1941,51 +2301,14 @@ nav.scrolled {
       </div>
       <div class="pkg-header">
         <p class="pkg-name">Starter</p>
-        <p class="pkg-price">R9,000</p>
+        <p class="pkg-price">R8,500</p>
       </div>
       <p class="pkg-tagline">A two-mark system built to give your brand a strong foundation. Includes a basic brand guide for logos, colours and typography.</p>
       <div class="pkg-divider"></div>
-      <button class="pkg-includes-toggle" onclick="toggleIncludes(this)">
+      <button type="button" class="pkg-view" data-open-inc="starter">
         What's included
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
-      <div class="pkg-includes">
-        <p class="pkg-includes-heading">Logo Development (2 x revision per element)</p>
-        <ul>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Moodboard</li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Concepts
-            <ul>
-              <li>2 x Logo Concepts</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Final Logos
-            <ul>
-              <li>2 x Variations (Primary &amp; Logomark)</li>
-            </ul>
-          </li>
-        </ul>
-        <p class="pkg-includes-heading">Basic Brand Guide</p>
-        <ul>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Logo
-            <ul>
-              <li>Logo clearance &amp; sizing (Primary &amp; Logomark)</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Colour Palette
-            <ul>
-              <li>RGB, CMYK &amp; hex values</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Typography
-            <ul>
-              <li>Primary &amp; secondary fonts</li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <div class="pkg-actions">
-        <a href="mailto:xcreativ3@gmail.com?subject=Starter%20Enquiry" class="pkg-cta pkg-cta-black">Enquire via Email</a>
-      </div>
     </div>
 
     <!-- BUILD (formerly Kickstart) -->
@@ -1995,68 +2318,14 @@ nav.scrolled {
       </div>
       <div class="pkg-header">
         <p class="pkg-name">Brand Kit</p>
-        <p class="pkg-price">R18,000</p>
+        <p class="pkg-price">R17,000</p>
       </div>
       <p class="pkg-tagline">A three-mark system built to bring consistency to your brand. Includes a streamlined brand guide for logos, colours, typography, photography, iconography and brand asset.</p>
       <div class="pkg-divider"></div>
-      <button class="pkg-includes-toggle" onclick="toggleIncludes(this)">
+      <button type="button" class="pkg-view" data-open-inc="brandkit">
         What's included
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
-      <div class="pkg-includes">
-        <p class="pkg-includes-heading">Logo Development (2 x revision per element)</p>
-        <ul>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Moodboard</li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Concepts
-            <ul>
-              <li>2 x Logo Concepts</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Final Logos
-            <ul>
-              <li>3 x Variations (Primary, Secondary &amp; Logomark)</li>
-            </ul>
-          </li>
-        </ul>
-        <p class="pkg-includes-heading">Streamlined Brand Guide (2 x revision per element)</p>
-        <ul>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Logo
-            <ul>
-              <li>Logo clearance &amp; sizing (Primary, Secondary &amp; Logomark)</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Colour Palette
-            <ul>
-              <li>RGB, CMYK &amp; hex values</li>
-              <li>Tints &amp; shades</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Typography
-            <ul>
-              <li>Primary &amp; secondary fonts</li>
-              <li>Weights</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Iconography
-            <ul>
-              <li>4 x Icon set</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Photography
-            <ul>
-              <li>4 x Photography style set</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Brand Asset
-            <ul>
-              <li>1 x Brand pattern or graphic asset</li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <div class="pkg-actions">
-        <a href="mailto:xcreativ3@gmail.com?subject=Brand%20Kit%20Enquiry" class="pkg-cta pkg-cta-black">Enquire via Email</a>
-      </div>
     </div>
 
     <!-- SCALE -->
@@ -2071,76 +2340,10 @@ nav.scrolled {
       </div>
       <p class="pkg-tagline">A four-mark system built to carry your brand everywhere. Includes a standard brand guide for logos, colours, typography, photography, iconography, brand assets and social templates.</p>
       <div class="pkg-divider"></div>
-      <button class="pkg-includes-toggle" onclick="toggleIncludes(this)">
+      <button type="button" class="pkg-view" data-open-inc="signature">
         What's included
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
-      <div class="pkg-includes">
-        <p class="pkg-includes-heading">Logo Development (2 x revision per element)</p>
-        <ul>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Moodboard</li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Concepts
-            <ul>
-              <li>3 x Logo Concepts</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Final Logos
-            <ul>
-              <li>4 x Variations (Primary, Secondary, Wordmark &amp; Logomark)</li>
-            </ul>
-          </li>
-        </ul>
-        <p class="pkg-includes-heading">Standard Brand Guide (2 x revision per element)</p>
-        <ul>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Logo
-            <ul>
-              <li>Logo clearance &amp; sizing (Primary, Secondary, Wordmark &amp; Logomark)</li>
-              <li>Misuse of logos</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Colour Palette
-            <ul>
-              <li>RGB, CMYK &amp; hex values</li>
-              <li>Colour hierarchy</li>
-              <li>Tints &amp; shades</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Typography
-            <ul>
-              <li>Primary &amp; secondary fonts</li>
-              <li>Weights</li>
-              <li>Type in use</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Iconography
-            <ul>
-              <li>8 x Icon set</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Photography
-            <ul>
-              <li>8 x Photography style set</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Brand Asset
-            <ul>
-              <li>2 x Brand pattern or graphic asset</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Brand Templates <span style="font-weight: 400; color: var(--light-muted);">(Choose 2 assets only)</span>
-            <ul>
-              <li>Business card template</li>
-              <li>Letterhead template</li>
-              <li>Email signature template</li>
-              <li>Social media banners (x2)</li>
-              <li>Social media post templates (x4)</li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <div class="pkg-actions">
-        <a href="mailto:xcreativ3@gmail.com?subject=Signature%20Package%20Enquiry" class="pkg-cta pkg-cta-red">Enquire via Email</a>
-      </div>
     </div>
 
     <!-- DOMINATE -->
@@ -2150,92 +2353,25 @@ nav.scrolled {
       </div>
       <div class="pkg-header">
         <p class="pkg-name">Premium</p>
-        <p class="pkg-price">R45,000</p>
+        <p class="pkg-price">R48,500</p>
       </div>
-      <p class="pkg-tagline">A four-mark system built to create a distinctive and fully developed brand. Includes a premium brand guide for foundation, logos, colours, typography, photography, iconography, brand assets and social templates.</p>
+      <p class="pkg-tagline">A four-mark system built to create a distinctive and fully developed brand. Includes a premium brand guide for foundation, logos, colours, typography, photography, iconography, brand assets and social templates, plus a logo animation reveal.</p>
       <div class="pkg-divider"></div>
-      <button class="pkg-includes-toggle" onclick="toggleIncludes(this)">
+      <button type="button" class="pkg-view" data-open-inc="premium">
         What's included
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
-      <div class="pkg-includes">
-        <p class="pkg-includes-heading">Logo Development (2 x revision per element)</p>
-        <ul>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Moodboard</li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Concepts
-            <ul>
-              <li>3 x Logo Concepts</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Final Logos
-            <ul>
-              <li>4 x Variations (Primary, Secondary, Wordmark &amp; Logomark)</li>
-            </ul>
-          </li>
-        </ul>
-        <p class="pkg-includes-heading">Premium Brand Guide (2 x revision per element)</p>
-        <ul>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Brand Foundation
-            <ul>
-              <li>Introduction</li>
-              <li>Our Story</li>
-              <li>Our Strategy</li>
-              <li>Our Verbal Identity</li>
-              <li>Visual Identity (Logo in action)</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Logo
-            <ul>
-              <li>Logo clearance &amp; sizing (Primary, Secondary, Wordmark &amp; Logomark)</li>
-              <li>Misuse of logos</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Colour Palette
-            <ul>
-              <li>RGB, CMYK &amp; hex values</li>
-              <li>Colour hierarchy</li>
-              <li>Tints &amp; shades</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Typography
-            <ul>
-              <li>Primary &amp; secondary fonts</li>
-              <li>Weights</li>
-              <li>Type spacing</li>
-              <li>Type in use</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Iconography
-            <ul>
-              <li>8 x Icon set</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Photography
-            <ul>
-              <li>8 x Photography style set</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Brand Asset
-            <ul>
-              <li>2 x Brand pattern or graphic asset</li>
-            </ul>
-          </li>
-          <li style="color: var(--dark-text, #111); font-weight: 700;">Brand Templates
-            <ul>
-              <li>Business card template</li>
-              <li>Letterhead template</li>
-              <li>Email signature template</li>
-              <li>Social media banners (x2)</li>
-              <li>Social media post templates (x4)</li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <div class="pkg-actions">
-        <a href="mailto:xcreativ3@gmail.com?subject=Premium%20Package%20Enquiry" class="pkg-cta pkg-cta-black">Enquire via Email</a>
-      </div>
     </div>
 
+  </div>
+  <div style="text-align:center; margin-top:1.5rem;">
+    <button type="button" class="packages-callout reveal reveal-delay-3" id="packagesCallout" data-open-calc aria-label="Open the package calculator">
+        <span class="packages-callout-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+        <span class="packages-callout-text">Need something different? Customise your own package</span>
+        <span class="packages-callout-cta">Open Calculator</span>
+      </button>
   </div>
 </div><!-- /.inner -->
 </section>
@@ -3527,6 +3663,562 @@ function closeMobileNav() {
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') close();
+  });
+})();
+</script>
+
+
+<!-- WHAT'S INCLUDED POPUP -->
+<div class="calc-modal" id="incModal" role="dialog" aria-modal="true" aria-labelledby="incTitle" aria-hidden="true">
+  <button type="button" class="calc-close" id="incClose" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    Close
+  </button>
+  <div class="pkg-calc" id="incBody"></div>
+</div>
+
+<!-- CUSTOM PACKAGE CALCULATOR MODAL -->
+<div class="calc-modal" id="calcModal" role="dialog" aria-modal="true" aria-labelledby="calcTitle" aria-hidden="true">
+  <button type="button" class="calc-close" id="calcClose" aria-label="Close calculator">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    Close
+  </button>
+  <div class="pkg-calc" id="pkgCalc">
+    <div class="calc-head">
+      <span class="calc-eyebrow">Packages &amp; Pricing Builder</span>
+      <h3 class="calc-title" id="calcTitle">Explore &amp; <span>Build Your Package</span></h3>
+      <p class="calc-sub">Choose a curated package to see its full price and everything that&rsquo;s included, or customise any section to build your own. Prices update as you go.</p>
+    </div>
+    <p class="calc-presets-label">Start from a package</p>
+    <div class="calc-presets" id="calcPresets"></div>
+    <div id="calcBody"></div>
+    <div class="calc-summary" id="calcSummary">
+      <button type="button" class="calc-min" id="calcMin" aria-expanded="true" aria-label="Minimise total bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div>
+        <p class="calc-total-label">Estimated total</p>
+        <p class="calc-total" id="calcTotal" aria-live="polite">R0</p>
+        <p class="calc-status" id="calcStatus"></p>
+      </div>
+      <a href="#" class="pkg-cta" id="calcCta">Enquire with this selection</a>
+    </div>
+    <p class="calc-note">Prices are estimates and may be adjusted after a brief discussion of your requirements.</p>
+  </div>
+</div>
+
+<script>
+// ── PACKAGE CALCULATOR ────────────────────────────────────────────────────
+// Edit prices here. Each preset (package) must add up to its package price —
+// a console warning is logged if it doesn't.
+(function() {
+  var root = document.getElementById('pkgCalc');
+  if (!root) return;
+
+  var ICON = {
+    concepts:'<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>',
+    variations:'<path d="M12 2l10 5-10 5L2 7l10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>',
+    guidelines:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+    colour:'<path d="M12 2.7s7 7.3 7 12a7 7 0 0 1-14 0c0-4.7 7-12 7-12z"/>',
+    type:'<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
+    icons:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+    photo:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+    asset:'<path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/>',
+    templates:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+    foundation:'<circle cx="12" cy="12" r="10"/><path d="M16.2 7.8l-2.1 6.3-6.3 2.1 2.1-6.3z"/>'
+  };
+
+  var GROUPS = [
+    { title: 'Logo Development', note: '2 x revision per element',
+      merge: { name: 'Logo Development', icon: 'concepts', columns: [['moodboard','concepts'],['variations','animation']], hint: 'Choose how many concepts you would like to see, then how many final logo variations you need.' },
+      sections: [
+      { id:'moodboard', name:'Moodboard', optional:true, multi:true, options:[
+        { id:'mb', label:'Moodboard', detail:'Visual direction for your logo concepts, agreed before design begins', price:1000 } ] },
+      { id:'concepts', name:'Logo Concepts', options:[
+        { id:'c2', label:'2 concepts', detail:'2 logo concepts to choose from', price:0, add:true },
+        { id:'c3', label:'3 concepts', detail:'3 logo concepts to choose from', price:1000, add:true },
+        { id:'c4', label:'4 concepts', detail:'4 logo concepts to choose from', price:2000, add:true } ] },
+      { id:'variations', name:'Final Logo Variations', options:[
+        { id:'v2', label:'2 variations', detail:'Primary & Logomark', price:4500 },
+        { id:'v3', label:'3 variations', detail:'Primary, Secondary & Logomark', price:6000 },
+        { id:'v4', label:'4 variations', detail:'Primary, Secondary, Wordmark & Logomark', price:7500 } ] },
+      { id:'animation', name:'Logo Reveal Animation', optional:true, multi:true, options:[
+        { id:'la', label:'Logo Reveal Animation', detail:'Single Logo (3 Dimensions)', price:5000 } ] }
+    ]},
+    { title: 'Brand Guide', note: '2 x revision per element', guide: true, toggle: true,
+      intro: 'Adds the essentials: clearance & sizing, RGB, CMYK & hex colour values and primary & secondary fonts. Switch it off if you only need a logo. Please note, without a brand guide you won’t have the guidelines to keep your brand clear and consistent.',
+      sections: [
+      { id:'foundation', name:'Brand Foundation', options:[
+        { id:'f0', label:'Not included', detail:'', price:0 },
+        { id:'f1', label:'Full foundation', detail:'Introduction, Our Story, Our Strategy, Our Verbal Identity & Visual Identity (logo in action)', price:10000 } ] },
+      { id:'guidelines', name:'Logo Guidelines', multi:true, options:[
+        { id:'g1', label:'Clearance & sizing', base:true, detail:'Logo clearance & sizing for every final logo variation', price:1000, by:'variations', prices:{ v2:1000, v3:1500, v4:2000 } },
+        { id:'g2', label:'Misuse of logos', detail:'Examples of incorrect logo usage', price:1100 } ] },
+      { id:'colour', name:'Colour Palette', multi:true, options:[
+        { id:'col1', label:'RGB, CMYK & hex values', base:true, detail:'Core colour palette', price:1500 },
+        { id:'col2', label:'Tints & shades', detail:'Extended palette variations', price:1000 },
+        { id:'col3', label:'Colour hierarchy', detail:'Primary, secondary & accent usage', price:1000 } ] },
+      { id:'type', name:'Typography', multi:true, options:[
+        { id:'t1', label:'Primary & secondary fonts', base:true, detail:'Core font pairing', price:1500 },
+        { id:'t2', label:'Weights', detail:'Approved font weights', price:1000 },
+        { id:'t3', label:'Type in use', detail:'Examples of the type in action', price:1000 },
+        { id:'t4', label:'Type spacing', detail:'Leading, tracking & spacing examples', price:500 } ] },
+      { id:'icons', name:'Iconography', options:[
+        { id:'i0', label:'Not included', detail:'', price:0 },
+        { id:'i4', label:'4 icons', detail:'4 x icon set', price:1200 },
+        { id:'i8', label:'8 icons', detail:'8 x icon set', price:1800 } ] },
+      { id:'photo', name:'Photography Style', options:[
+        { id:'p0', label:'Not included', detail:'', price:0 },
+        { id:'p4', label:'4 images', detail:'4 x photography style set', price:1200 },
+        { id:'p8', label:'8 images', detail:'8 x photography style set', price:1800 } ] },
+      { id:'asset', name:'Brand Assets', options:[
+        { id:'a0', label:'Not included', detail:'', price:0 },
+        { id:'a1', label:'1 asset', detail:'1 x brand pattern or graphic asset', price:1100 },
+        { id:'a2', label:'2 assets', detail:'2 x brand pattern or graphic assets', price:1800 } ] },
+      { id:'templates', name:'Brand Templates', note:'Templates are supplied through Canva or Adobe Illustrator.', options:[
+        { id:'m0', label:'Not included', detail:'', price:0 },
+        { id:'m2', label:'Choose 2 templates', detail:'Choose any 2: business card, letterhead, email signature, social media banners (x2) or social post templates (x4)', price:4000 },
+        { id:'m9', label:'Full template set', detail:'Business card, letterhead, email signature, social media banners (x2) & social post templates (x4)', price:8000 } ] }
+    ]}
+  ];
+
+  var PACKAGES = [
+    { id:'starter',   name:'Starter',   price:8500,
+      pick:{ guideOn:true, animation:[], moodboard:[], concepts:'c2', variations:'v2', foundation:'f0', guidelines:['g1'], colour:['col1'], type:['t1'], icons:'i0', photo:'p0', asset:'a0', templates:'m0' } },
+    { id:'brandkit',  name:'Brand Kit', price:17000,
+      pick:{ guideOn:true, animation:[], moodboard:['mb'], concepts:'c2', variations:'v3', foundation:'f0', guidelines:['g1'], colour:['col1','col2'], type:['t1','t2'], icons:'i4', photo:'p4', asset:'a1', templates:'m0' } },
+    { id:'signature', name:'Signature', price:29000,
+      pick:{ guideOn:true, animation:[], moodboard:['mb'], concepts:'c3', variations:'v4', foundation:'f0', guidelines:['g1','g2'], colour:['col1','col2','col3'], type:['t1','t2','t3'], icons:'i8', photo:'p8', asset:'a2', templates:'m2' } },
+    { id:'premium',   name:'Premium',   price:48500,
+      pick:{ guideOn:true, animation:['la'], moodboard:['mb'], concepts:'c3', variations:'v4', foundation:'f1', guidelines:['g1','g2'], colour:['col1','col2','col3'], type:['t1','t2','t3','t4'], icons:'i8', photo:'p8', asset:'a2', templates:'m9' } }
+  ];
+
+  var sections = [];
+  GROUPS.forEach(function(g) { g.sections.forEach(function(s) { s.guide = !!g.guide; sections.push(s); }); });
+  var lookup = {};
+  sections.forEach(function(s) { lookup[s.id] = {}; s.options.forEach(function(o) { lookup[s.id][o.id] = o; }); });
+
+  function fmt(n) { return 'R' + n.toLocaleString('en-US'); }
+  // An option's price, which for final logo variations depends on the concept option chosen.
+  function optPrice(sel, id, o) { return o.prices ? o.prices[sel[o.by || 'concepts']] : o.price; }
+  function priceOf(sel, id) {
+    var v = sel[id];
+    if (Array.isArray(v)) return v.reduce(function(t, x) { return t + optPrice(sel, id, lookup[id][x]); }, 0);
+    return optPrice(sel, id, lookup[id][v]);
+  }
+  function clone(pick) {
+    var o = {};
+    Object.keys(pick).forEach(function(k) { o[k] = Array.isArray(pick[k]) ? pick[k].slice() : pick[k]; });
+    return o;
+  }
+  function same(a, b) {
+    return Array.isArray(a) ? a.slice().sort().join('|') === b.slice().sort().join('|') : a === b;
+  }
+  function totalOf(sel) { return sections.reduce(function(t, s) { return t + priceOf(sel, s.id); }, 0); }
+  function matches(sel, pick) { return sel.guideOn === pick.guideOn && sections.every(function(s) { return same(sel[s.id], pick[s.id]); }); }
+
+  // Brand-guide essentials: whenever anything else in the Brand Guide is chosen,
+  // the options flagged base:true (clearance & sizing, RGB/CMYK/hex, core fonts) are required.
+  var BASE = {};
+  sections.forEach(function(sec) {
+    sec.options.forEach(function(o) { if (o.base) BASE[sec.id] = o.id; });
+  });
+  function hasExtras(sel) {
+    return sections.some(function(sec) {
+      if (!sec.guide) return false;
+      if (sec.multi) return sel[sec.id].some(function(id) { return !lookup[sec.id][id].base; });
+      return lookup[sec.id][sel[sec.id]].price > 0;
+    });
+  }
+  function setBase(sel, on) {
+    Object.keys(BASE).forEach(function(sid) {
+      var arr = sel[sid].filter(function(id) { return id !== BASE[sid]; });
+      if (on) arr.push(BASE[sid]);
+      sel[sid] = arr;
+    });
+  }
+  function normalize(sel) {
+    if (!sel.guideOn) {
+      // no brand guide: every guide section is cleared
+      sections.forEach(function(sec) { if (sec.guide) sel[sec.id] = sec.multi ? [] : sec.options[0].id; });
+    } else {
+      setBase(sel, true); // the three essentials are always included with a brand guide
+    }
+    sections.forEach(function(sec) {
+      if (!sec.multi) return;
+      sel[sec.id] = sec.options.filter(function(o) { return sel[sec.id].indexOf(o.id) > -1; }).map(function(o) { return o.id; });
+    });
+    return sel;
+  }
+
+  var guideStash = null; // remembers guide selections while the brand guide is switched off
+
+  // Sanity check: every preset must add up to its package price.
+  PACKAGES.forEach(function(p) {
+    var t = totalOf(p.pick);
+    if (t !== p.price) console.warn('[Calculator] ' + p.name + ' adds up to ' + fmt(t) + ' but the package price is ' + fmt(p.price));
+  });
+
+  var state = normalize(clone(PACKAGES[2].pick)); // start on Signature
+
+  // ── Render ──
+  var presetsEl = document.getElementById('calcPresets');
+  var bodyEl = document.getElementById('calcBody');
+  var totalEl = document.getElementById('calcTotal');
+  var statusEl = document.getElementById('calcStatus');
+  var ctaEl = document.getElementById('calcCta');
+
+  PACKAGES.forEach(function(p) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'calc-preset'; b.dataset.pkg = p.id;
+    b.innerHTML = '<b>' + p.name + '</b><small>' + fmt(p.price) + '</small>';
+    b.addEventListener('click', function() { state = normalize(clone(p.pick)); guideStash = null; sync(true); });
+    presetsEl.appendChild(b);
+  });
+  // "Custom": logo only (2 concepts, 2 variations, no brand guide) to build up from
+  var CUSTOM_START = { guideOn: false, animation: [], moodboard: [], concepts: 'c2', variations: 'v2', foundation: 'f0',
+    guidelines: [], colour: [], type: [], icons: 'i0', photo: 'p0', asset: 'a0', templates: 'm0' };
+  var customBtn = document.createElement('button');
+  customBtn.type = 'button'; customBtn.className = 'calc-preset calc-preset-custom'; customBtn.dataset.pkg = 'custom';
+  customBtn.innerHTML = '<b>Custom</b><small>From ' + fmt(totalOf(normalize(clone(CUSTOM_START)))) + '</small>';
+  customBtn.addEventListener('click', function() { state = normalize(clone(CUSTOM_START)); guideStash = null; sync(true); });
+  presetsEl.appendChild(customBtn);
+
+  function iconHtml(k) {
+    return '<span class="calc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[k] + '</svg></span>';
+  }
+  function buildOpts(s) {
+    return s.options.map(function(o) {
+      return '<label class="calc-opt"><input type="' + (s.multi ? 'checkbox' : 'radio') + '" name="calc-' + s.id + '" value="' + o.id + '"' + (o.base ? ' data-base="1"' : '') + '>' +
+        '<span class="calc-opt-body"><span class="calc-radio' + (s.multi ? ' calc-check' : '') + '"></span>' +
+        '<span class="calc-opt-text"><span class="calc-opt-label">' + o.label + (o.base ? '<span class="calc-opt-tag">Included</span>' : '') + '</span>' +
+        (o.detail ? '<span class="calc-opt-detail">' + o.detail + '</span>' : '') + '</span>' +
+        '<span class="calc-opt-price"></span></span></label>';
+    }).join('');
+  }
+  function toggleGuide(on) {
+    if (!on) {
+      guideStash = {};
+      sections.forEach(function(sec) {
+        if (sec.guide) guideStash[sec.id] = Array.isArray(state[sec.id]) ? state[sec.id].slice() : state[sec.id];
+      });
+      state.guideOn = false;
+    } else {
+      state.guideOn = true;
+      if (guideStash) Object.keys(guideStash).forEach(function(k) { state[k] = guideStash[k]; });
+    }
+    normalize(state);
+    sync(true);
+  }
+  function wire(card, s) {
+    card.addEventListener('change', function(e) {
+      if (e.target.name !== 'calc-' + s.id) return;
+      if (s.multi && lookup[s.id][e.target.value].base) {
+        setBase(state, e.target.checked); // the three essentials switch on/off together
+      } else if (s.multi) {
+        state[s.id] = Array.prototype.filter.call(card.querySelectorAll('input'), function(i) { return i.checked; })
+          .map(function(i) { return i.value; });
+      } else {
+        state[s.id] = e.target.value;
+      }
+      normalize(state);
+      sync(false, s.id);
+    });
+    var allBtn = card.querySelector('[data-all]');
+    if (allBtn) allBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var every = state[s.id].length === s.options.length;
+      state[s.id] = every ? [] : s.options.map(function(o) { return o.id; });
+      normalize(state);
+      sync(false, s.id);
+    });
+  }
+
+  GROUPS.forEach(function(g) {
+    var title = document.createElement('p');
+    title.className = 'calc-group-title';
+    title.innerHTML = g.title + (g.note ? ' <span class="calc-group-note">&middot; ' + g.note + '</span>' : '');
+    var grid = document.createElement('div');
+    grid.className = 'calc-grid';
+    if (g.merge) {
+      // several sections shown together in one wide card (logo concepts + variations)
+      var mcard = document.createElement('div');
+      mcard.className = 'calc-sec calc-sec-wide';
+      mcard.dataset.merged = g.sections.map(function(x) { return x.id; }).join(',');
+      mcard.innerHTML =
+        '<div class="calc-sec-head">' + iconHtml(g.merge.icon) +
+        '<span class="calc-sec-name">' + g.merge.name + '<span class="calc-sec-hint">' + g.merge.hint + '</span></span>' +
+        '<span class="calc-sec-price" data-merged-price></span></div>' +
+        '<div class="calc-parts">' + (g.merge.columns || [g.sections.map(function(x) { return x.id; })]).map(function(col) {
+          return '<div class="calc-col">' + col.map(function(sid) {
+            var x = g.sections.filter(function(y) { return y.id === sid; })[0];
+            var idx = g.sections.indexOf(x);
+            return '<div class="calc-part" data-sec="' + x.id + '"><p class="calc-part-label"><span>' + (idx + 1) + '</span>' + x.name + (x.optional ? '<em class="calc-part-opt">optional</em>' : '') + '</p>' +
+              '<div class="calc-opts" role="' + (x.multi ? 'group' : 'radiogroup') + '" aria-label="' + x.name + '">' + buildOpts(x) + '</div></div>';
+          }).join('') + '</div>';
+        }).join('') + '</div>';
+      g.sections.forEach(function(x) { wire(mcard.querySelector('[data-sec="' + x.id + '"]'), x); });
+      grid.appendChild(mcard);
+    } else {
+      g.sections.forEach(function(sec) {
+        var card = document.createElement('div');
+        card.className = 'calc-sec'; card.dataset.sec = sec.id;
+        card.innerHTML =
+          '<div class="calc-sec-head">' + iconHtml(sec.id) +
+          '<span class="calc-sec-name">' + sec.name +
+          (sec.note ? '<span class="calc-sec-hint">' + sec.note + '</span>' : '') +
+          (sec.multi ? '<span class="calc-sec-hint">Select all that apply <button type="button" class="calc-all" data-all>Select all</button></span>' : '') +
+          '</span><span class="calc-sec-price" data-price></span></div>' +
+          '<div class="calc-opts" role="' + (sec.multi ? 'group' : 'radiogroup') + '" aria-label="' + sec.name + '">' + buildOpts(sec) + '</div>';
+        wire(card, sec);
+        grid.appendChild(card);
+      });
+    }
+    bodyEl.appendChild(title);
+    if (g.toggle) {
+      var basePrice = Object.keys(BASE).reduce(function(t, sid) { return t + lookup[sid][BASE[sid]].price; }, 0);
+      var tg = document.createElement('label');
+      tg.className = 'calc-guide-toggle';
+      tg.innerHTML = '<input type="checkbox" id="calcGuideToggle" role="switch"><span class="calc-switch"></span>' +
+        '<span class="calc-guide-text"><b>Include Brand Identity Guide</b><small>' + g.intro + '</small></span>' +
+        '<span class="calc-guide-price">Essentials ' + fmt(basePrice) + '</span>';
+      tg.querySelector('input').addEventListener('change', function(e) { toggleGuide(e.target.checked); });
+      bodyEl.appendChild(tg);
+    } else if (g.intro) { var intro = document.createElement('p'); intro.className = 'calc-group-intro'; intro.textContent = g.intro; bodyEl.appendChild(intro); }
+    bodyEl.appendChild(grid);
+  });
+
+  function sync(all, changedId) {
+    var locked = !!state.guideOn;
+    var gt = document.getElementById('calcGuideToggle');
+    if (gt) gt.checked = locked;
+    sections.forEach(function(s) {
+      var card = bodyEl.querySelector('[data-sec="' + s.id + '"]');
+      card.querySelectorAll('input').forEach(function(i) {
+        i.checked = s.multi ? state[s.id].indexOf(i.value) > -1 : i.value === state[s.id];
+        var o = lookup[s.id][i.value];
+        var pr = i.closest('.calc-opt').querySelector('.calc-opt-price');
+        if (o.add) {
+          // concept options show what they add on top of the base price
+          pr.textContent = o.price ? '+' + fmt(o.price) : 'Included';
+        } else {
+          var pv = optPrice(state, s.id, o);
+          pr.textContent = pv ? fmt(pv) : '\u2013';
+        }
+        if (s.guide) i.disabled = !locked || !!i.dataset.base;
+        if (i.dataset.base) i.closest('.calc-opt').classList.toggle('calc-opt-locked', locked);
+      });
+      card.classList.toggle('calc-sec-off', !!s.guide && !locked);
+      var ab = card.querySelector('[data-all]');
+      if (ab) ab.disabled = !locked;
+      if (ab) ab.textContent = state[s.id].length === s.options.length ? (locked && BASE[s.id] ? 'Clear extras' : 'Clear') : 'Select all';
+      var pe = card.querySelector('[data-price]');
+      if (pe) {
+        var v = priceOf(state, s.id);
+        pe.textContent = v ? fmt(v) : 'R0';
+        if (all || s.id === changedId) {
+          pe.classList.add('bump');
+          setTimeout(function() { pe.classList.remove('bump'); }, 220);
+        }
+      }
+    });
+    bodyEl.querySelectorAll('[data-merged]').forEach(function(mc) {
+      var ids = mc.dataset.merged.split(',');
+      var mp = mc.querySelector('[data-merged-price]');
+      mp.textContent = fmt(ids.reduce(function(t, id) { return t + priceOf(state, id); }, 0));
+      if (all || ids.indexOf(changedId) > -1) {
+        mp.classList.add('bump');
+        setTimeout(function() { mp.classList.remove('bump'); }, 220);
+      }
+    });
+
+    var total = totalOf(state);
+    totalEl.textContent = fmt(total);
+
+    var hit = PACKAGES.filter(function(p) { return matches(state, p.pick); })[0];
+    presetsEl.querySelectorAll('.calc-preset').forEach(function(b) {
+      b.classList.toggle('active', hit ? b.dataset.pkg === hit.id : b.dataset.pkg === 'custom');
+    });
+
+    if (hit) {
+      statusEl.className = 'calc-status match';
+      statusEl.textContent = 'Matches the ' + hit.name + ' package';
+    } else {
+      var near = PACKAGES.slice().sort(function(a, b) { return Math.abs(a.price - total) - Math.abs(b.price - total); })[0];
+      var diff = total - near.price;
+      statusEl.className = 'calc-status';
+      statusEl.textContent = 'Custom build \u2014 ' + (diff === 0 ? 'same price as' : fmt(Math.abs(diff)) + (diff > 0 ? ' above' : ' below')) + ' the ' + near.name + ' package';
+    }
+
+    var lines = sections.map(function(s) {
+      if (s.multi) {
+        var names = state[s.id].map(function(x) { return lookup[s.id][x].label; });
+        var sv = priceOf(state, s.id);
+        return '- ' + s.name + ': ' + (names.length ? names.join(', ') + ' (' + fmt(sv) + ')' : 'Not included');
+      }
+      var o = lookup[s.id][state[s.id]];
+      var op = optPrice(state, s.id, o);
+      return '- ' + s.name + ': ' + o.label + (op ? ' (' + fmt(op) + ')' : '');
+    });
+    var subject = hit ? hit.name + ' Package Enquiry' : 'Custom Package Enquiry';
+    var body = 'Hi Xander,\n\nI\'d like to enquire about the following package:\n\n' + lines.join('\n') + '\n\nEstimated total: ' + fmt(total) + '\n\nThanks!';
+    ctaEl.href = 'mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
+
+  // ── "What's included" popup, generated from the same data as the calculator ──
+  ICON.moodboard = '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>';
+  ICON.animation = '<circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/>';
+  var HEADS = { starter:'Basic Brand Guide', brandkit:'Streamlined Brand Guide', signature:'Standard Brand Guide', premium:'Premium Brand Guide' };
+  var DETAIL_SECS = { moodboard:1, variations:1, foundation:1, icons:1, photo:1, asset:1, templates:1, animation:1 };
+  function esc(t) { return String(t).replace(/&/g, '&amp;'); }
+  function incLines(pk, sec) {
+    var v = pk.pick[sec.id], ids = Array.isArray(v) ? v : [v];
+    return ids.map(function(id) {
+      var o = lookup[sec.id][id];
+      if (!o || (optPrice(pk.pick, sec.id, o) === 0 && !o.add)) return null;
+      if (sec.id === 'variations') return o.label.replace(/s$/, '') + 's (' + o.detail + ')';
+      if (sec.id === 'concepts') return o.label.replace('concepts', 'Logo Concepts').replace(/^(\d) /, '$1 x ');
+      return DETAIL_SECS[sec.id] && o.detail ? o.detail : o.label;
+    }).filter(Boolean);
+  }
+  function buildInc(pk, tagline) {
+    var html = '<div class="calc-head"><span class="calc-eyebrow">What&rsquo;s included</span>' +
+      '<h3 class="calc-title" id="incTitle">' + pk.name + ' <span>Package</span></h3>' +
+      (tagline ? '<p class="calc-sub">' + esc(tagline) + '</p>' : '') +
+      '<p class="inc-price">' + fmt(pk.price) + '</p></div>';
+    GROUPS.forEach(function(g, gi) {
+      var cards = '';
+      g.sections.forEach(function(sec) {
+        var lines = incLines(pk, sec);
+        if (!lines.length) return;
+        cards += '<div class="calc-sec"><div class="calc-sec-head">' + iconHtml(sec.id) + '<span class="calc-sec-name">' + sec.name + '</span></div>' +
+          '<ul class="inc-list">' + lines.map(function(l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ul></div>';
+      });
+      if (!cards) return;
+      html += '<p class="calc-group-title">' + (gi === 0 ? 'Logo Development' : HEADS[pk.id]) + ' <span class="calc-group-note">&middot; 2 x revision per element</span></p><div class="calc-grid">' + cards + '</div>';
+    });
+    html += '<div class="inc-foot"><a class="btn-primary" href="mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent(pk.name + ' Package Enquiry') + '">Enquire via Email</a>' +
+      '<button type="button" class="inc-ghost" data-open-calc data-pkg="' + pk.id + '">Customise this package</button></div>' +
+      '<p class="calc-note">Prices are estimates and may be adjusted after a brief discussion of your requirements.</p>';
+    return html;
+  }
+  var incModal = document.getElementById('incModal');
+  var incBody = document.getElementById('incBody');
+  var incClose = document.getElementById('incClose');
+  var incLastFocus = null;
+  function openInc(id, tagline) {
+    var pk = PACKAGES.filter(function(x) { return x.id === id; })[0];
+    if (!pk) return;
+    incLastFocus = document.activeElement;
+    incBody.innerHTML = buildInc(pk, tagline);
+    incModal.classList.add('open');
+    incModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    incModal.scrollTop = 0;
+    setTimeout(function() { incClose.focus({ preventScroll: true }); }, 60);
+  }
+  function closeInc(restore) {
+    if (!incModal.classList.contains('open')) return;
+    incModal.classList.remove('open');
+    incModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (restore !== false && incLastFocus && incLastFocus.focus) incLastFocus.focus({ preventScroll: true });
+  }
+  document.addEventListener('click', function(e) {
+    var t = e.target.closest('[data-open-inc]');
+    if (t) {
+      var card = t.closest('.pkg-card');
+      var tag = card && card.querySelector('.pkg-tagline');
+      openInc(t.dataset.openInc, tag ? tag.textContent : '');
+    }
+  });
+  // capture phase: close this popup before the calculator opens from its "Customise" button
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('#incModal [data-open-calc]')) closeInc(false);
+  }, true);
+  incClose.addEventListener('click', function() { closeInc(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && incModal.classList.contains('open')) closeInc();
+  });
+
+  sync(false);
+
+  // ── Teaser card: "From" price + section chips ──
+  var minTotal = sections.reduce(function(t, sec) {
+    return t + Math.min.apply(null, sec.options.map(function(o) {
+      return o.prices ? Math.min.apply(null, Object.keys(o.prices).map(function(k) { return o.prices[k]; })) : o.price;
+    }).concat(sec.multi ? [0] : []));
+  }, 0);
+  var fromEl = document.getElementById('calcFrom');
+  if (fromEl) fromEl.textContent = 'From ' + fmt(minTotal);
+  var pillsEl = document.getElementById('calcPkgPills');
+  if (pillsEl) pillsEl.innerHTML = PACKAGES.map(function(pk) {
+    return '<button type="button" class="pkg-mini" data-open-calc data-pkg="' + pk.id + '"><b>' + pk.name + '</b><small>' + fmt(pk.price) + '</small></button>';
+  }).join('');
+  var chipsEl = document.getElementById('calcChips');
+  if (chipsEl) {
+    var chipList = [];
+    GROUPS.forEach(function(g) {
+      if (g.merge) chipList.push({ name: g.merge.name, icon: g.merge.icon });
+      else g.sections.forEach(function(sec) { chipList.push({ name: sec.name, icon: sec.id }); });
+    });
+    chipsEl.innerHTML = chipList.map(function(c) {
+      return '<span class="pkg-chip"><span class="calc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[c.icon] + '</svg></span>' + c.name + '</span>';
+    }).join('');
+  }
+
+  // ── Open / close the calculator ──
+  var modal = document.getElementById('calcModal');
+  var closeBtn = document.getElementById('calcClose');
+  var lastFocus = null;
+  var summaryEl = document.getElementById('calcSummary');
+  var minBtn = document.getElementById('calcMin');
+  var mobileMq = window.matchMedia('(max-width: 700px)');
+  function setMin(on) {
+    summaryEl.classList.toggle('min', on);
+    minBtn.setAttribute('aria-expanded', on ? 'false' : 'true');
+    minBtn.setAttribute('aria-label', on ? 'Expand total bar' : 'Minimise total bar');
+  }
+  minBtn.addEventListener('click', function() { setMin(!summaryEl.classList.contains('min')); });
+  mobileMq.addEventListener && mobileMq.addEventListener('change', function(e) { setMin(e.matches); });
+  setMin(mobileMq.matches);
+
+  function openCalc(pkgId) {
+    lastFocus = document.activeElement;
+    if (pkgId) {
+      var pk = PACKAGES.filter(function(x) { return x.id === pkgId; })[0];
+      if (pk) { state = normalize(clone(pk.pick)); guideStash = null; sync(true); }
+    }
+    setMin(mobileMq.matches);
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    modal.scrollTop = 0;
+    setTimeout(function() { closeBtn.focus({ preventScroll: true }); }, 60);
+  }
+  function closeCalc() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+  }
+  document.addEventListener('click', function(e) {
+    var t = e.target.closest('[data-open-calc]');
+    if (t) openCalc(t.dataset.pkg);
+  });
+  closeBtn.addEventListener('click', closeCalc);
+  document.addEventListener('keydown', function(e) {
+    if (!modal.classList.contains('open')) return;
+    if (e.key === 'Escape') { closeCalc(); return; }
+    if (e.key !== 'Tab') return;
+    var f = Array.prototype.filter.call(
+      modal.querySelectorAll('button, a[href], input'),
+      function(n) { return n.offsetParent !== null || n === closeBtn; });
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 })();
 </script>
