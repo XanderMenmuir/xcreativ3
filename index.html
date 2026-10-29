@@ -752,7 +752,7 @@ section { padding: 7rem 0; width: 100%; }
   font-size: 0.54rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
   background: rgba(255,255,255,0.1); color: var(--muted-dark); display: none;
 }
-.calc-opt-locked .calc-opt-tag { display: inline-block; }
+.calc-opt-locked .calc-opt-tag, .calc-opt-tag.always { display: inline-block; }
 .calc-opt-locked, .calc-opt-locked input { cursor: not-allowed; }
 .calc-min {
   display: none; position: absolute; top: 0.55rem; right: 0.6rem;
@@ -2301,7 +2301,7 @@ nav.scrolled {
       </div>
       <div class="pkg-header">
         <p class="pkg-name">Starter</p>
-        <p class="pkg-price">R8,500</p>
+        <p class="pkg-price">R9,000</p>
       </div>
       <p class="pkg-tagline">A two-mark system built to give your brand a strong foundation. Includes a basic brand guide for logos, colours and typography.</p>
       <div class="pkg-divider"></div>
@@ -2318,7 +2318,7 @@ nav.scrolled {
       </div>
       <div class="pkg-header">
         <p class="pkg-name">Brand Kit</p>
-        <p class="pkg-price">R17,000</p>
+        <p class="pkg-price">R17,500</p>
       </div>
       <p class="pkg-tagline">A three-mark system built to bring consistency to your brand. Includes a streamlined brand guide for logos, colours, typography, photography, iconography and brand asset.</p>
       <div class="pkg-divider"></div>
@@ -2336,7 +2336,7 @@ nav.scrolled {
       <span class="pkg-badge">Most Value</span>
       <div class="pkg-header">
         <p class="pkg-name">Signature</p>
-        <p class="pkg-price">R29,000</p>
+        <p class="pkg-price">R29,500</p>
       </div>
       <p class="pkg-tagline">A four-mark system built to carry your brand everywhere. Includes a standard brand guide for logos, colours, typography, photography, iconography, brand assets and social templates.</p>
       <div class="pkg-divider"></div>
@@ -2353,7 +2353,7 @@ nav.scrolled {
       </div>
       <div class="pkg-header">
         <p class="pkg-name">Premium</p>
-        <p class="pkg-price">R48,500</p>
+        <p class="pkg-price">R49,000</p>
       </div>
       <p class="pkg-tagline">A four-mark system built to create a distinctive and fully developed brand. Includes a premium brand guide for foundation, logos, colours, typography, photography, iconography, brand assets and social templates, plus a logo animation reveal.</p>
       <div class="pkg-divider"></div>
@@ -3735,13 +3735,13 @@ function closeMobileNav() {
       { id:'moodboard', name:'Moodboard', optional:true, multi:true, options:[
         { id:'mb', label:'Moodboard', detail:'Visual direction for your logo concepts, agreed before design begins', price:1000 } ] },
       { id:'concepts', name:'Logo Concepts', options:[
-        { id:'c2', label:'2 concepts', detail:'2 logo concepts to choose from', price:0, add:true },
-        { id:'c3', label:'3 concepts', detail:'3 logo concepts to choose from', price:1000, add:true },
-        { id:'c4', label:'4 concepts', detail:'4 logo concepts to choose from', price:2000, add:true } ] },
+        { id:'c2', label:'2 concepts', detail:'2 logo concepts to choose from', price:2000, add:true, incl:true },
+        { id:'c3', label:'3 concepts', detail:'3 logo concepts to choose from', price:3000, add:true },
+        { id:'c4', label:'4 concepts', detail:'4 logo concepts to choose from', price:4000, add:true } ] },
       { id:'variations', name:'Final Logo Variations', options:[
-        { id:'v2', label:'2 variations', detail:'Primary & Logomark', price:4500 },
-        { id:'v3', label:'3 variations', detail:'Primary, Secondary & Logomark', price:6000 },
-        { id:'v4', label:'4 variations', detail:'Primary, Secondary, Wordmark & Logomark', price:7500 } ] },
+        { id:'v2', label:'2 variations', detail:'Primary & Logomark', price:3000, add:true, incl:true },
+        { id:'v3', label:'3 variations', detail:'Primary, Secondary & Logomark', price:4500, add:true },
+        { id:'v4', label:'4 variations', detail:'Primary, Secondary, Wordmark & Logomark', price:6000, add:true } ] },
       { id:'animation', name:'Logo Reveal Animation', optional:true, multi:true, options:[
         { id:'la', label:'Logo Reveal Animation', detail:'Single Logo (3 Dimensions)', price:5000 } ] }
     ]},
@@ -3783,13 +3783,13 @@ function closeMobileNav() {
   ];
 
   var PACKAGES = [
-    { id:'starter',   name:'Starter',   price:8500,
+    { id:'starter',   name:'Starter',   price:9000,
       pick:{ guideOn:true, animation:[], moodboard:[], concepts:'c2', variations:'v2', foundation:'f0', guidelines:['g1'], colour:['col1'], type:['t1'], icons:'i0', photo:'p0', asset:'a0', templates:'m0' } },
-    { id:'brandkit',  name:'Brand Kit', price:17000,
+    { id:'brandkit',  name:'Brand Kit', price:17500,
       pick:{ guideOn:true, animation:[], moodboard:['mb'], concepts:'c2', variations:'v3', foundation:'f0', guidelines:['g1'], colour:['col1','col2'], type:['t1','t2'], icons:'i4', photo:'p4', asset:'a1', templates:'m0' } },
-    { id:'signature', name:'Signature', price:29000,
+    { id:'signature', name:'Signature', price:29500,
       pick:{ guideOn:true, animation:[], moodboard:['mb'], concepts:'c3', variations:'v4', foundation:'f0', guidelines:['g1','g2'], colour:['col1','col2','col3'], type:['t1','t2','t3'], icons:'i8', photo:'p8', asset:'a2', templates:'m2' } },
-    { id:'premium',   name:'Premium',   price:48500,
+    { id:'premium',   name:'Premium',   price:49000,
       pick:{ guideOn:true, animation:['la'], moodboard:['mb'], concepts:'c3', variations:'v4', foundation:'f1', guidelines:['g1','g2'], colour:['col1','col2','col3'], type:['t1','t2','t3','t4'], icons:'i8', photo:'p8', asset:'a2', templates:'m9' } }
   ];
 
@@ -3891,7 +3891,7 @@ function closeMobileNav() {
     return s.options.map(function(o) {
       return '<label class="calc-opt"><input type="' + (s.multi ? 'checkbox' : 'radio') + '" name="calc-' + s.id + '" value="' + o.id + '"' + (o.base ? ' data-base="1"' : '') + '>' +
         '<span class="calc-opt-body"><span class="calc-radio' + (s.multi ? ' calc-check' : '') + '"></span>' +
-        '<span class="calc-opt-text"><span class="calc-opt-label">' + o.label + (o.base ? '<span class="calc-opt-tag">Included</span>' : '') + '</span>' +
+        '<span class="calc-opt-text"><span class="calc-opt-label">' + o.label + ((o.base || o.incl) ? '<span class="calc-opt-tag' + (o.incl ? ' always' : '') + '">Included</span>' : '') + '</span>' +
         (o.detail ? '<span class="calc-opt-detail">' + o.detail + '</span>' : '') + '</span>' +
         '<span class="calc-opt-price"></span></span></label>';
     }).join('');
@@ -4000,7 +4000,7 @@ function closeMobileNav() {
         var pr = i.closest('.calc-opt').querySelector('.calc-opt-price');
         if (o.add) {
           // concept options show what they add on top of the base price
-          pr.textContent = o.price ? '+' + fmt(o.price) : 'Included';
+          pr.textContent = o.incl ? fmt(o.price) : '+' + fmt(o.price - s.options[0].price);
         } else {
           var pv = optPrice(state, s.id, o);
           pr.textContent = pv ? fmt(pv) : '\u2013';
