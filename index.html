@@ -4098,7 +4098,18 @@ function closeMobileNav() {
       if (!cards) return;
       html += '<p class="calc-group-title">' + (gi === 0 ? 'Logo Development' : HEADS[pk.id]) + ' <span class="calc-group-note">&middot; 2 x revision per element</span></p><div class="calc-grid">' + cards + '</div>';
     });
-    html += '<div class="inc-foot"><a class="btn-primary" href="mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent(pk.name + ' Package Enquiry') + '">Enquire with this selection</a>' +
+    var elines = sections.map(function(s) {
+      if (s.multi) {
+        var names = pk.pick[s.id].map(function(x) { return lookup[s.id][x].label; });
+        var sv = priceOf(pk.pick, s.id);
+        return '- ' + s.name + ': ' + (names.length ? names.join(', ') + ' (' + fmt(sv) + ')' : 'Not included');
+      }
+      var o = lookup[s.id][pk.pick[s.id]];
+      var op = optPrice(pk.pick, s.id, o);
+      return '- ' + s.name + ': ' + o.label + (op ? ' (' + fmt(op) + ')' : '');
+    });
+    var ebody = 'Hi Xander,\n\nI\'d like to enquire about the ' + pk.name + ' package:\n\n' + elines.join('\n') + '\n\nEstimated total: ' + fmt(totalOf(pk.pick)) + '\n\nThanks!';
+    html += '<div class="inc-foot"><a class="btn-primary" href="mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent(pk.name + ' Package Enquiry') + '&body=' + encodeURIComponent(ebody) + '">Enquire with this selection</a>' +
       '<button type="button" class="inc-ghost" data-open-calc data-pkg="' + pk.id + '">Customise this package</button></div>' +
       '<p class="calc-note">Prices are estimates and may be adjusted after a brief discussion of your requirements.</p>';
     return html;
