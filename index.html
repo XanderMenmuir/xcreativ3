@@ -4275,5 +4275,245 @@ window.SmoothScrollOptions = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/SmoothScroll.min.js" defer></script>
+<!-- ── CHAT ASSISTANT (FAQ bot: answers come from the packages, process & Terms of Service on this site) ── -->
+<style>
+.xcb-launch{position:fixed;right:1.25rem;bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));z-index:900;display:flex;align-items:center;gap:.6rem;padding:.85rem 1.3rem;background:var(--red);color:#fff;border:0;cursor:pointer;font:700 .72rem 'Montserrat',sans-serif;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 8px 28px rgba(0,0,0,.35);transition:background .25s}
+.xcb-launch:hover{background:var(--red-dark)}
+.xcb-launch svg{width:16px;height:16px}
+.xcb-launch:focus-visible,.xcb-chip:focus-visible,.xcb-x:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.xcb-panel{padding:0;position:fixed;right:1.25rem;bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));z-index:900;width:384px;max-width:calc(100vw - 2.5rem);height:min(620px,calc(100vh - 2.5rem));display:none;flex-direction:column;background:var(--off-black);border:1px solid var(--border-dark);border-top:3px solid var(--red);box-shadow:0 20px 60px rgba(0,0,0,.55);font-family:'Montserrat',sans-serif;color:var(--grey)}
+.xcb-panel.open{display:flex}
+.xcb-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:1.1rem 1.2rem .95rem;border-bottom:1px solid var(--border-dark)}
+.xcb-head b{display:block;color:#fff;font-size:.95rem;font-weight:700}
+.xcb-head small{display:block;margin-top:.25rem;font-size:.7rem;line-height:1.45;color:var(--muted-dark)}
+.xcb-top{display:flex;align-items:center;gap:.9rem}
+.xcb-home{background:none;border:1px solid rgba(255,255,255,.22);color:var(--grey);cursor:pointer;padding:.35rem .6rem;font:600 .68rem 'Montserrat',sans-serif;white-space:nowrap;transition:border-color .2s,color .2s}
+.xcb-home:hover{border-color:var(--red);color:#fff}
+.xcb-home:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.xcb-foot{flex:none;padding:.7rem 1.2rem;border-top:1px solid var(--border-dark);background:var(--off-black)}
+.xcb-foot[hidden]{display:none}
+.xcb-panel:focus{outline:none}
+.xcb-x{background:none;border:0;color:var(--grey);cursor:pointer;padding:.2rem;line-height:0}
+.xcb-x svg{width:18px;height:18px}
+.xcb-log{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.7rem;scrollbar-width:thin}
+.xcb-m{max-width:88%;padding:.75rem .9rem;font-size:.82rem;line-height:1.6;background:var(--card-dark);border:1px solid var(--border-dark)}
+.xcb-m ul{margin:.4rem 0 0;padding-left:1.1rem}.xcb-m li{margin:.15rem 0}
+.xcb-m b{color:#fff}.xcb-m a{color:#fff;text-decoration:underline;text-underline-offset:2px}
+.xcb-m small{display:block;margin-top:.5rem;color:var(--muted-dark);font-size:.7rem}
+.xcb-m.me{align-self:flex-end;background:var(--red);border-color:var(--red);color:#fff}
+.xcb-chips{display:flex;flex-wrap:wrap;gap:.45rem}
+.xcb-chip{padding:.5rem .8rem;background:transparent;color:var(--grey);border:1px solid rgba(255,255,255,.22);font:600 .74rem 'Montserrat',sans-serif;cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s,background .2s}
+.xcb-chip:hover{border-color:var(--red);color:#fff;background:rgba(180,0,13,.18)}
+.xcb-chip.go{border-color:var(--red);color:#fff}
+.xcb-dots{align-self:flex-start;color:var(--muted-dark);font-size:.8rem;letter-spacing:.2em;padding:.2rem .4rem}
+.xcb-bubble{position:fixed;right:1.25rem;bottom:calc(1.25rem + env(safe-area-inset-bottom,0px));z-index:900;display:grid;place-items:center;width:58px;height:58px;padding:0;border-radius:50%;background:#0a0a0a;border:1.5px solid var(--red);cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 18px rgba(180,0,13,.18);-webkit-tap-highlight-color:transparent;transition:transform .2s,box-shadow .2s}
+.xcb-bubble:hover{transform:scale(1.06);box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 24px rgba(180,0,13,.35)}
+.xcb-bubble img{width:60%;height:60%;object-fit:contain;pointer-events:none}
+.xcb-bubble:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.xcb-bubble{overflow:hidden;animation:xcbRing 2.6s ease-out infinite}
+@keyframes xcbRing{0%{box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 18px rgba(180,0,13,.18),0 0 0 0 rgba(180,0,13,.55)}70%,100%{box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 18px rgba(180,0,13,.18),0 0 0 16px rgba(180,0,13,0)}}
+.xcb-bubble::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);transform:translateX(-130%);animation:xcbSweep 4s ease-in-out infinite}
+@keyframes xcbSweep{0%,58%{transform:translateX(-130%)}90%,100%{transform:translateX(130%)}}
+@media (prefers-reduced-motion:reduce){.xcb-bubble,.xcb-bubble::after{animation:none}}
+.xcb-bubble svg{width:60%;height:60%;display:block;pointer-events:none;overflow:visible}
+.xcb-bubble .xcb-w{fill:#dfdfe0}
+.xcb-bubble .xcb-r{fill:#b4000d;animation:xcbPulse 4s ease-in-out infinite}
+@keyframes xcbPulse{0%,62%,100%{fill:#b4000d;filter:none}74%{fill:#dfdfe0;filter:drop-shadow(0 0 5px rgba(255,255,255,.85))}86%{fill:#b4000d;filter:none}}
+@media (prefers-reduced-motion:reduce){.xcb-bubble .xcb-r{animation:none}}
+@keyframes xcbIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+.xcb-launch{display:none;right:calc(1.25rem + 58px + .6rem);bottom:calc(1.25rem + 7px + env(safe-area-inset-bottom,0px))}
+.xcb-launch.show{display:flex;animation:xcbIn .22s ease-out}
+@media (prefers-reduced-motion:reduce){.xcb-launch.show{animation:none}.xcb-bubble{transition:none}}
+@media (max-width:520px){
+.xcb-panel{right:0;bottom:0;width:100vw;max-width:100vw;height:82vh;padding:0 0 env(safe-area-inset-bottom,0px)}
+.xcb-bubble{right:.9rem;bottom:calc(.9rem + env(safe-area-inset-bottom,0px))}
+.xcb-launch{right:calc(.9rem + 58px + .6rem);bottom:calc(.9rem + 7px + env(safe-area-inset-bottom,0px))}
+}
+</style>
+
+<button type="button" class="xcb-bubble" id="xcbBubble" aria-label="Open quick answers chat" aria-haspopup="dialog" aria-controls="xcbPanel"><img alt="" /></button>
+<button type="button" class="xcb-launch" id="xcbLaunch" aria-expanded="false" aria-controls="xcbPanel">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  Quick answers
+</button>
+<div class="xcb-panel" id="xcbPanel" tabindex="-1" role="dialog" aria-label="Questions about packages and services">
+  <div class="xcb-head">
+    <div><b>Quick answers</b><small>Answers come from the packages, process and Terms of Service on this site.</small></div>
+    <div class="xcb-top"><button type="button" class="xcb-x" id="xcbClose" aria-label="Close quick answers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  </div>
+  <div class="xcb-log" id="xcbLog" role="log" aria-live="polite"></div>
+  <div class="xcb-foot" id="xcbFoot" hidden><button type="button" class="xcb-chip" id="xcbBack">&larr; Back to start</button></div>
+</div>
+
+<script>
+(function () {
+  var TOS = 'terms-of-service.html';
+  var T = { // topic chips shown at the start and after answers
+    packages:'Packages & pricing', choose:'Help me choose', time:'How long does it take?', pay:'Payment & deposit',
+    rev:'Revisions', own:'Who owns the files?', services:'Additional services', custom:'Build a custom package'
+  };
+  var MAIN = ['packages','choose','time','pay','rev','own','services','custom',{ l: 'Ask something else', a: 'mailq', go: 1 }];
+  var QUOTE = [{l:'Start an enquiry',a:'contact'},{l:'Email xcreativ3',a:'mail'}];
+  var TERMS_NOTE = '<small>This is a summary. The full <a href="'+TOS+'" target="_blank" rel="noopener">Terms of Service</a> apply.</small>';
+
+  // Each entry: k = keyword regexes (free-text matching), t = answer, c = follow-up chips (ids or actions)
+  var KB = {
+    packages:{k:['package','pricing','price','cost','how much','rate','fee','expensive','afford'],
+      t:'<b>Logo &amp; identity packages</b><ul><li><b>Starter, R9,000:</b> two-mark system with a basic brand guide</li><li><b>Brand Kit, R16,500:</b> three-mark system with a streamlined brand guide</li><li><b>Signature, R28,500:</b> four-mark system with a standard brand guide and social templates (most value)</li><li><b>Premium, R48,000:</b> four-mark system with a premium brand guide and a logo animation reveal</li></ul>',
+      c:['inc_starter','inc_brandkit','inc_signature','inc_premium','choose','custom']},
+    inc_starter:{l:'What’s in Starter?',k:['starter'],
+      t:'<b>Starter (R9,000)</b><ul><li>Questionnaire and moodboard, then 2 logo concepts to choose from</li><li>2 final logo variations: primary and logomark</li><li>Basic brand guide: logo clearance and sizing, core colour palette (RGB, CMYK, hex) and primary and secondary fonts</li></ul>',
+      c:['inc_brandkit','choose',{l:'Enquire about Starter',a:'contact:Starter'}]},
+    inc_brandkit:{l:'What’s in Brand Kit?',k:['brand kit','brandkit'],
+      t:'<b>Brand Kit (R16,500)</b><ul><li>Questionnaire and moodboard, then 2 logo concepts</li><li>3 final logo variations: primary, secondary and logomark</li><li>Brand guide: clearance and sizing, colour palette with tints and shades, fonts and weights</li><li>Iconography (4 icons), photography style (4 images) and 1 brand asset</li></ul>',
+      c:['inc_signature','choose',{l:'Enquire about Brand Kit',a:'contact:Brand Kit'}]},
+    inc_signature:{l:'What’s in Signature?',k:['signature'],
+      t:'<b>Signature (R28,500)</b><ul><li>Questionnaire and moodboard, then 3 logo concepts</li><li>4 final logo variations: primary, secondary, wordmark and logomark</li><li>Brand guide: clearance and sizing, misuse examples, full colour palette with hierarchy, fonts, weights and type in use</li><li>Iconography (8 icons), photography style (8 images) and 2 brand assets</li><li>Your choice of 2 templates (business card, letterhead, email signature, social banners or social posts)</li></ul>',
+      c:['inc_premium','choose',{l:'Enquire about Signature',a:'contact:Signature'}]},
+    inc_premium:{l:'What’s in Premium?',k:['premium','animation','logo reveal'],
+      t:'<b>Premium (R48,000)</b><ul><li>Questionnaire and moodboard, then 3 logo concepts</li><li>4 final logo variations, plus a logo reveal animation</li><li>Full brand foundation: introduction, our story, strategy, verbal identity and visual identity</li><li>Brand guide with misuse examples, full colour palette, fonts, weights, type in use and type spacing</li><li>Iconography (8), photography style (8) and 2 brand assets</li><li>Full template set: business card, letterhead, email signature, 2 social banners and 4 social post templates</li></ul>',
+      c:['inc_signature','custom',{l:'Enquire about Premium',a:'contact:Premium'}]},
+    choose:{l:'Help me choose',k:['choose','recommend','which package','best for','not sure','suggest','budget'],
+      t:'Which budget range is closest? These match the ranges on the enquiry form.',
+      c:[{l:'Under R10,000',to:'r1'},{l:'R10,000 – R30,000',to:'r2'},{l:'R30,000 – R50,000',to:'r3'},{l:'R50,000+',to:'r4'}]},
+    r1:{t:'<b>Starter (R9,000)</b> fits this range: two logo marks plus a basic brand guide. If you only need a logo, the custom calculator starts lower.',c:['inc_starter','custom']},
+    r2:{t:'<b>Brand Kit (R16,500)</b> or <b>Signature (R28,500)</b> fit here. Signature adds a fourth logo variation, more guide pages and two templates, and is marked “Most Value” on the site.',c:['inc_brandkit','inc_signature']},
+    r3:{t:'<b>Premium (R48,000)</b> fits here: the most complete package, with a brand foundation, full templates and a logo reveal animation.',c:['inc_premium','custom']},
+    r4:{t:'<b>Premium (R48,000)</b> covers the full identity. For anything beyond it, such as motion graphics, social media or ongoing design support, a custom package can be scoped for you.',c:['inc_premium','services',{l:'Start an enquiry',a:'contact'}]},
+    time:{k:['how long','timeline','lead time','turnaround','duration','weeks','days','week','process','steps','when will','deadline','fast','quick','how soon'],
+      t:'<b>The process has four steps</b><ul><li><b>Discover:</b> typically 1–2 days, starting once the 50% deposit has cleared</li><li><b>Define:</b> typically 1–2 weeks (moodboarding, concepts, final logo approval)</li><li><b>Design:</b> typically 1–2 weeks (full brand identity and a complete first draft)</li><li><b>Deliver:</b> typically 1–2 days (files prepared and delivered)</li></ul>Adding the steps together comes to roughly 2½ to 4½ weeks. Revisions happen within Define and Design.<small>Timelines are estimates and can change with feedback, approvals and project requirements.</small>',
+      c:['pay','rev','quote']},
+    pay:{k:['pay','payment','deposit','invoice','instalment','installment','payment plan','balance','upfront','50%'],
+      t:'<ul><li>A <b>50% deposit</b> may be requested before work starts. It’s invoiced by email, and paying it means you accept the Terms of Service.</li><li>Invoices are due within <b>30 days</b>.</li><li>The remaining balance is invoiced before logo files or final exports are released, and delivery waits until it is paid in full.</li><li>Payment plans can be requested. They’re considered at the designer’s discretion and must be agreed in writing.</li></ul>'+TERMS_NOTE,
+      c:['time','backup','cancel','quote']},
+    rev:{k:['revision','revisions','changes','amend','edit','tweak','feedback','rounds','not happy','don.t like'],
+      t:'<ul><li>The calculator lists <b>2 revisions per element</b> for logo development and the brand guide, and the Terms say each package includes a set number of rounds, as confirmed in your quote.</li><li>A revision is a minor adjustment (colour, typography, layout) to an existing concept. A completely new direction or a scope change isn’t covered.</li><li>Extra revisions are billed at <b>R800 per hour</b>.</li><li>Services outside logo and identity design usually don’t include formal revision rounds.</li></ul>'+TERMS_NOTE,
+      c:['time','own','quote']},
+    own:{k:['own','owner','ownership','copyright','rights','portfolio','nda','confidential','secret','stealth','who owns','usage'],
+      t:'<ul><li>The final artwork and digital files become <b>yours once final payment is received in full</b>.</li><li>Sketches, preparation materials and unused ideas stay with Xander Menmuir (xcreativ3) and may be reused.</li><li>Finished work may be shown in the portfolio and promotions. If you need secrecy or an NDA, raise it before agreeing to the proposal.</li><li>You can modify the finished logo, at your own risk.</li></ul>'+TERMS_NOTE,
+      c:['backup','fonts','trademark','pay']},
+    backup:{l:'File storage & backups',k:['backup','back up','storage','store','lost files','lose','retrieval','re-supply','resend','re-send','download','saved','save the files','after delivery','archive'],
+      t:'<ul><li>Once your final files are delivered, <b>you’re responsible for saving and backing them up</b>.</li><li>Xander Menmuir (xcreativ3) <b>doesn’t guarantee long-term storage</b> of project files.</li><li>If you need files re-supplied after delivery, a <b>retrieval fee</b> may be charged, billed at the ad-hoc rate of <b>R800 per hour</b> for the time taken.</li></ul>'+TERMS_NOTE,
+      c:['own','pay','quote']},
+    fonts:{l:'Fonts & licences',k:['font','typeface','licence','license'],
+      t:'Fonts bought for a final design fall under commercial licensing, and getting any licence you need is your responsibility. Details of the typefaces used, and where to get them, are shared at the concept presentation. A font converted to vector artwork inside a logo usually needs no separate licence, but if you want to use the font in editable artwork (a website or presentation), you need your own desktop licence.'+TERMS_NOTE,
+      c:['own','trademark']},
+    trademark:{l:'Trademarks & naming',k:['trademark','register','naming','business name','name change','plagiar','original'],
+      t:'<ul><li>No help is given with trademark or copyright searches. For a registered trademark, get independent legal advice.</li><li>You’re responsible for checking your business or product name is legally free before work begins. If a name change is needed mid-project, the cost is recalculated.</li><li>Designs are original to the best of knowledge, with limited checks such as reverse image searches, and you should do your own due diligence before using delivered work.</li></ul>'+TERMS_NOTE,
+      c:['own','fonts']},
+    cancel:{l:'Cancellations & refunds',k:['cancel','refund','stop the project','suspend','terminate','money back','illness'],
+      t:'<ul><li>If you cancel midway after ideas have been submitted, a refund of earlier payments isn’t possible. Depending on the work done and the budget, a portion may be returned at discretion.</li><li>If work can’t be completed due to illness or unforeseen circumstances, a portion of the budget is returned, in most cases the full amount.</li><li>A project can be suspended for reasons such as excessive micromanagement or reluctance to make final payment. Fair notice is given first.</li></ul>'+TERMS_NOTE,
+      c:['pay','rev','quote']},
+    services:{l:'Additional services',k:['service','graphic design','motion','social media','agency','freelance','extra','hourly','retainer','support'],
+      t:'<ul><li><b>Graphic design:</b> flexible support, booked in advance with a 5-hour minimum, usable within 1 month</li><li><b>Motion graphics:</b> animated logo reveals, brand transitions and motion assets</li><li><b>Agency support:</b> freelance capacity and specialist design for agencies</li><li><b>Social media:</b> content creation, design and scheduling through a monthly calendar</li></ul>Slots are limited. Pricing for these is shared on enquiry.',
+      c:['custom',{l:'Enquire about a service',a:'contact'},'quote']},
+    custom:{l:'Build a custom package',k:['custom','calculator','build my own','tailor','pick and choose','only a logo','just a logo','logo only'],
+      t:'The calculator lets you build your own. A logo only (2 concepts and 2 final variations) starts at <b>R5,000</b>, and the questionnaire and moodboard are included in every package. You can then add more concepts (up to 4), more logo variations (up to 4), a logo reveal animation (R5,000) and brand guide pieces such as colour, typography, icons, photography, assets and templates. Prices are estimates and may be adjusted after a brief discussion.',
+      c:[{l:'Open the calculator',a:'calc',go:1},'packages']},
+    privacy:{k:['privacy','popia','personal information','data','delete my'],
+      t:'Enquiry details (name, email, optional phone, project type, budget and message) are used only to respond to your enquiry, under POPIA. You can ask for access, correction or deletion any time at xcreativ3@gmail.com, and requests are answered within 30 days.'+TERMS_NOTE,c:['quote']},
+    who:{k:['who','xander','designer','experience','cape town','location','where are you','based'],
+      t:'xcreativ3 is a boutique studio run by <b>Xander Menmuir</b>, a brand designer in Cape Town, South Africa. He has a decade of experience across industries including sports betting, gaming, automotive, AI, tech, energy, finance and agriculture, and designs, leads and delivers every project himself.',
+      c:['packages','quote']},
+    liability:{k:['liable','liability','guarantee','warranty','responsible'],
+      t:'Xander Menmuir (xcreativ3) isn’t legally responsible for loss or damage arising from the use of the services or delivered materials, and use of delivered work is at your own risk. See the Limitation of Liability section of the Terms for the full wording.'+TERMS_NOTE,c:['own','trademark']},
+    quote:{l:'Get a quote',k:['quote','contact','email','hire','get started','start a project','book','enquire','enquiry','talk to','speak','phone','call'],
+      t:'The quickest way to get started is the enquiry form. Share your vision, timeline and budget and you’ll get a reply as soon as possible. You can also email xcreativ3@gmail.com.',
+      c:[{l:'Go to the enquiry form',a:'contact',go:1},{l:'Email xcreativ3',a:'mail'}]},
+    hello:{k:['^hi$','^hello','^hey','^howzit','good morning','good afternoon','^thanks','thank you'],t:'Happy to help. What would you like to know?',c:MAIN}
+  };
+  var FALLBACK = '<b>I can’t answer that one.</b> Tap below to email your question and you’ll get a personal reply.';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var launch = $('xcbLaunch'), panel = $('xcbPanel'), log = $('xcbLog'), bubble_ = $('xcbBubble');
+  // Logomark bubble: one click opens the chat. The mark is inlined as SVG (not <img>) so its red parts can pulse.
+  var mark = document.querySelector('.footer-logo-mark'), bImg = bubble_.querySelector('img');
+  if (mark) {
+    try {
+      var src = mark.getAttribute('src');
+      var svgText = decodeURIComponent(escape(atob(src.split(',')[1])));
+      svgText = svgText.replace(/<\?xml[^>]*\?>/, '').replace(/<defs>[\s\S]*?<\/defs>/, '')
+        .replace(/class="cls-1"/g, 'class="xcb-w"').replace(/class="cls-2"/g, 'class="xcb-r"')
+        .replace(/ id="[^"]*"| data-name="[^"]*"/g, '')
+        .replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+      bubble_.innerHTML = svgText;
+    } catch (err) { if (bImg) bImg.src = mark.getAttribute('src'); }
+  } else bubble_.style.display = 'none';
+  function expand(on) { launch.classList.toggle('show', on); }
+  bubble_.addEventListener('click', function (e) { e.stopPropagation(); open(); });
+  var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var started = false;
+
+  function open() {
+    panel.classList.add('open'); launch.style.display = 'none'; bubble_.style.visibility = 'hidden'; expand(false); launch.setAttribute('aria-expanded', 'true');
+    if (!started) { started = true; home(); }
+    setTimeout(function () { panel.focus({ preventScroll: true }); }, 30);
+  }
+  function home() { log.innerHTML = ''; $('xcbFoot').hidden = true; say('Hi! I can answer questions about the packages, pricing, process and Terms of Service. Pick a topic below. If it isn’t covered, you can email your question.', MAIN); }
+  function close() { panel.classList.remove('open'); launch.style.display = ''; bubble_.style.visibility = ''; launch.setAttribute('aria-expanded', 'false'); (getComputedStyle(launch).display !== 'none' ? launch : bubble_).focus({ preventScroll: true }); }
+  launch.addEventListener('click', open);
+  $('xcbBack').addEventListener('click', function () { home(); });
+  $('xcbClose').addEventListener('click', close);
+  panel.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+
+  function scroll() { log.scrollTop = log.scrollHeight; requestAnimationFrame(function () { log.scrollTop = log.scrollHeight; }); }
+  function bubble(html, me) {
+    var d = document.createElement('div'); d.className = 'xcb-m' + (me ? ' me' : '');
+    if (me) d.textContent = html; else d.innerHTML = html;
+    log.appendChild(d); scroll(); return d;
+  }
+  function chipLabel(c) { return typeof c === 'string' ? (T[c] || (KB[c] && KB[c].l) || c) : c.l; }
+  function chips(list) {
+    var wrap = document.createElement('div'); wrap.className = 'xcb-chips';
+    list.forEach(function (c) {
+      var o = typeof c === 'string' ? { l: chipLabel(c), to: c } : c;
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'xcb-chip' + (o.go ? ' go' : ''); b.textContent = o.l;
+      b.addEventListener('click', function () {
+        wrap.remove();
+        if (o.a === 'mailq' || o.a === 'mail') {
+          // keep the menu available in case no email app opens
+          bubble(o.l, true);
+          say('Opening an email to <b>xcreativ3@gmail.com</b>. If nothing opens, copy that address and email it directly.', MAIN);
+          act(o.a);
+        } else if (o.a) act(o.a); else { bubble(o.l, true); reply(o.to); }
+      });
+      wrap.appendChild(b);
+    });
+    log.appendChild(wrap); scroll();
+  }
+  function say(html, list) { bubble(html); if (list) { if (list !== MAIN) $('xcbFoot').hidden = false; chips(list === MAIN ? list : list.concat([{ l: 'Ask something else', a: 'mailq' }])); } }
+  function reply(id) {
+    var e = KB[id];
+    if (!e) { say(FALLBACK, [{l:'Email your question to xcreativ3',a:'mailq',go:1},'packages','time','pay']); return; }
+    var dots = document.createElement('div'); dots.className = 'xcb-dots'; dots.textContent = '•••'; dots.setAttribute('aria-hidden', 'true');
+    log.appendChild(dots); scroll();
+    setTimeout(function () { dots.remove(); say(e.t, e.c || MAIN); }, calm ? 0 : 350);
+  }
+
+  // Actions: open the calculator, jump to the enquiry form (pre-filled), or email
+  function setField(name, test, fallback) {
+    var el = document.querySelector('#contact [name="' + name + '"]'); if (!el) return;
+    if (el.tagName === 'SELECT') {
+      for (var i = 0; i < el.options.length; i++) if (test(el.options[i].textContent)) { el.selectedIndex = i; break; }
+    } else if (!el.value) el.value = fallback;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  function act(a) {
+    if (a === 'home') { home(); return; }
+    if (a === 'mailq') { window.location.href = 'mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent('Quick answers enquiry') + '&body=' + encodeURIComponent('Hi xcreativ3,\n\nMy question:\n\n'); return; }
+    if (a === 'mail') { window.location.href = 'mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent('Quick answers enquiry'); return; }
+    if (a === 'calc') {
+      var b = document.querySelector('[data-open-calc]'); close(); if (b) b.click(); return;
+    }
+    if (a.indexOf('contact') === 0) {
+      var pkg = a.split(':')[1];
+      setField('project_type', function (t) { return /logo/i.test(t); }, '');
+      if (pkg) setField('message', null, 'Hi, I’m interested in the ' + pkg + ' package.');
+      close();
+      var c = $('contact'); if (c) c.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+})();
+</script>
 </body>
 </html>
