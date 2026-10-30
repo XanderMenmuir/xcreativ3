@@ -402,9 +402,15 @@ section { padding: 7rem 0; width: 100%; }
 }
 .about-copy-col .section-label { align-self: flex-start; margin-bottom: 1.5rem; }
 .hero .hero-tag { margin-bottom: 1.8rem; }
+.hero-tag .tag-short { display: none; }
+@media (max-width: 600px) {
+  .hero-tag .tag-full { display: none; }
+  .hero-tag .tag-short { display: inline; }
+}
 @media (max-width: 768px) {
   .about-copy-col .section-label { align-self: center; }
 }
+
 
 /* Pills sit centered above their titles */
 .packages-header > div > .section-label,
@@ -2238,7 +2244,7 @@ nav.scrolled {
     </video>
   </div>
   <div class="hero-bg-overlay"></div>
-  <p class="hero-tag">Strategic Logo &amp; Brand Identity Design</p>
+  <p class="hero-tag" aria-label="Strategic Logo &amp; Brand Identity Design"><span class="tag-full" aria-hidden="true">Strategic Logo &amp; Brand Identity Design</span><span class="tag-short" aria-hidden="true">Strategic Logo &amp; Branding</span></p>
   <h1 class="hero-headline">
     Building <span class="rotating-word-wrap"><span class="rotating-word accent" id="rotatingWord">logos</span></span><br>that break through<br>and <span class="accent">drive growth.</span>
   </h1>
