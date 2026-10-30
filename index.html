@@ -344,6 +344,105 @@ section { padding: 7rem 0; width: 100%; }
 }
 .section-title .accent { color: var(--red); }
 
+/* ── HEADING REFINEMENT ───────────────────────────────────── */
+/* Centered section labels become a pill with a pulsing red dot */
+.section-label[style*="justify-content:center"],
+.section-label[style*="justify-content: center"] {
+  display: flex;
+  width: fit-content;
+  gap: 0.65rem;
+  padding: 0.5rem 1.05rem 0.5rem 0.9rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(180,0,13,0.35);
+  border-radius: 999px;
+  background: rgba(180,0,13,0.08);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1;
+}
+.section-label[style*="justify-content:center"]::before,
+.section-label[style*="justify-content: center"]::before {
+  display: block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 0 rgba(180,0,13,0.55);
+  animation: labelDot 2.4s ease-out infinite;
+}
+@keyframes labelDot {
+  0%   { box-shadow: 0 0 0 0 rgba(180,0,13,0.55); }
+  70%, 100% { box-shadow: 0 0 0 7px rgba(180,0,13,0); }
+}
+/* Services label had its own rule hiding the dot; hero tag and About label join the pill system */
+.services-strip .services-strip-head .section-label::before,
+.about-copy-col .section-label::before,
+.hero .hero-tag::before {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 0 rgba(180,0,13,0.55);
+  animation: labelDot 2.4s ease-out infinite;
+}
+.about-copy-col .section-label,
+.hero .hero-tag {
+  display: flex;
+  width: fit-content;
+  gap: 0.65rem;
+  padding: 0.5rem 1.05rem 0.5rem 0.9rem;
+  border: 1px solid rgba(180,0,13,0.35);
+  border-radius: 999px;
+  background: rgba(180,0,13,0.08);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1;
+}
+.about-copy-col .section-label { align-self: flex-start; margin-bottom: 1.5rem; }
+.hero .hero-tag { margin-bottom: 1.8rem; }
+@media (max-width: 768px) {
+  .about-copy-col .section-label { align-self: center; }
+}
+
+/* Pills sit centered above their titles */
+.packages-header > div > .section-label,
+.services-strip-head .section-label,
+.process-header .section-label,
+.reviews-header .section-label,
+.case-studies-header .section-label,
+.brands-header .section-label,
+#contact .section-label { margin-left: auto; margin-right: auto; }
+
+/* Titles: heavier, tighter, balanced line breaks */
+.section-title {
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+/* Short red rule under centered titles */
+.packages-header .section-title::after,
+.services-strip-head .section-title::after,
+.process-header .section-title::after,
+.reviews-header .section-title::after,
+.case-studies-header .section-title::after,
+.brands-header .section-title::after,
+#contact .section-title::after {
+  content: '';
+  display: block;
+  width: 44px; height: 3px;
+  margin: 1.4rem auto 0;
+  border-radius: 3px;
+  background: var(--red);
+}
+/* Intro copy under headings */
+.packages-intro, .process-intro, .brands-sub { max-width: 600px; }
+@media (prefers-reduced-motion: reduce) {
+  .section-label::before { animation: none !important; }
+}
+
 /* SLOTS BANNER */
 .slots-banner {
   background: #0f0000;
