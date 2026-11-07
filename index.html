@@ -2420,7 +2420,7 @@ nav.scrolled {
       </div>
       <div class="pkg-header">
         <p class="pkg-name">Brand Kit</p>
-        <p class="pkg-price">R18,500</p>
+        <p class="pkg-price">R18,000</p>
       </div>
       <p class="pkg-tagline">A three-mark system built to bring consistency to your brand. Includes a streamlined brand guide for logos, colours, typography, photography, iconography, brand asset and a brand template of your choice.</p>
       <div class="pkg-divider"></div>
@@ -2438,7 +2438,7 @@ nav.scrolled {
       <span class="pkg-badge">Most Value</span>
       <div class="pkg-header">
         <p class="pkg-name">Signature</p>
-        <p class="pkg-price">R28,500</p>
+        <p class="pkg-price">R27,500</p>
       </div>
       <p class="pkg-tagline">A four-mark system built to carry your brand everywhere. Includes a standard brand guide for logos, colours, typography, photography, iconography, brand assets and social templates.</p>
       <div class="pkg-divider"></div>
@@ -2455,7 +2455,7 @@ nav.scrolled {
       </div>
       <div class="pkg-header">
         <p class="pkg-name">Premium</p>
-        <p class="pkg-price">R43,000</p>
+        <p class="pkg-price">R42,000</p>
       </div>
       <p class="pkg-tagline">A four-mark system built to create a distinctive and fully developed brand. Includes a premium brand guide for foundation, logos, colours, typography, photography, iconography, brand assets and social templates, plus a logo animation reveal.</p>
       <div class="pkg-divider"></div>
@@ -3844,8 +3844,8 @@ function closeMobileNav() {
         { id:'c4', label:'4 concepts', detail:'4 logo concepts to choose from, each including your chosen logo variations', price:4000, add:true } ] },
       { id:'variations', name:'Logo Variations', options:[
         { id:'v2', label:'2 variations', detail:'Primary & Logomark', price:3000, add:true, incl:true },
-        { id:'v3', label:'3 variations', detail:'Primary, Secondary & Logomark', price:4500, add:true },
-        { id:'v4', label:'4 variations', detail:'Primary, Secondary, Wordmark & Logomark', price:6000, add:true } ] },
+        { id:'v3', label:'3 variations', detail:'Primary, Secondary & Logomark', price:4000, add:true },
+        { id:'v4', label:'4 variations', detail:'Primary, Secondary, Wordmark & Logomark', price:5000, add:true } ] },
       { id:'animation', name:'Logo Reveal Animation', optional:true, multi:true, options:[
         { id:'la', label:'Logo Reveal Animation', detail:'Single Logo (3 Dimensions)', price:5000 } ] }
     ]},
@@ -3890,11 +3890,11 @@ function closeMobileNav() {
   var PACKAGES = [
     { id:'starter',   name:'Starter',   price:9000,
       pick:{ guideOn:true, animation:[], moodboard:'mb', concepts:'c2', variations:'v2', foundation:'f0', guidelines:['g1'], colour:['col1'], type:['t1'], icons:'i0', photo:'p0', asset:'a0', templates:'m0' } },
-    { id:'brandkit',  name:'Brand Kit', price:18500,
+    { id:'brandkit',  name:'Brand Kit', price:18000,
       pick:{ guideOn:true, animation:[], moodboard:'mb', concepts:'c2', variations:'v3', foundation:'f0', guidelines:['g1'], colour:['col1','col2'], type:['t1','t2'], icons:'i4', photo:'p4', asset:'a1', templates:'m1' } },
-    { id:'signature', name:'Signature', price:28500,
+    { id:'signature', name:'Signature', price:27500,
       pick:{ guideOn:true, animation:[], moodboard:'mb', concepts:'c3', variations:'v4', foundation:'f0', guidelines:['g1','g2'], colour:['col1','col2','col3'], type:['t1','t2','t3'], icons:'i8', photo:'p8', asset:'a2', templates:'m2' } },
-    { id:'premium',   name:'Premium',   price:43000,
+    { id:'premium',   name:'Premium',   price:42000,
       pick:{ guideOn:true, animation:['la'], moodboard:'mb', concepts:'c3', variations:'v4', foundation:'f1', guidelines:['g1','g2'], colour:['col1','col2','col3'], type:['t1','t2','t3','t4'], icons:'i8', photo:'p8', asset:'a2', templates:'m9' } }
   ];
 
@@ -4461,27 +4461,27 @@ window.SmoothScrollOptions = {
   // Each entry: k = keyword regexes (free-text matching), t = answer, c = follow-up chips (ids or actions)
   var KB = {
     packages:{k:['package','pricing','price','cost','how much','rate','fee','expensive','afford'],
-      t:'<b>Logo &amp; identity packages</b><ul><li><b>Starter, R9,000:</b> two-mark system with a basic brand guide</li><li><b>Brand Kit, R18,500:</b> three-mark system with a streamlined brand guide</li><li><b>Signature, R28,500:</b> four-mark system with a standard brand guide and social templates (most value)</li><li><b>Premium, R43,000:</b> four-mark system with a premium brand guide and a logo animation reveal</li></ul>',
+      t:'<b>Logo &amp; identity packages</b><ul><li><b>Starter, R9,000:</b> two-mark system with a basic brand guide</li><li><b>Brand Kit, R18,000:</b> three-mark system with a streamlined brand guide</li><li><b>Signature, R27,500:</b> four-mark system with a standard brand guide and social templates (most value)</li><li><b>Premium, R42,000:</b> four-mark system with a premium brand guide and a logo animation reveal</li></ul>',
       c:['inc_starter','inc_brandkit','inc_signature','inc_premium','choose','custom']},
     inc_starter:{l:'What’s in Starter?',k:['starter'],
       t:'<b>Starter (R9,000)</b><ul><li>Questionnaire and moodboard, then 2 logo concepts to choose from</li><li>2 logo variations: primary and logomark</li><li>Basic brand guide: logo clearance and sizing, core colour palette (RGB, CMYK, hex) and primary and secondary fonts</li></ul>',
       c:['inc_brandkit','choose',{l:'Enquire about Starter',a:'contact:Starter'}]},
     inc_brandkit:{l:'What’s in Brand Kit?',k:['brand kit','brandkit'],
-      t:'<b>Brand Kit (R18,500)</b><ul><li>Questionnaire and moodboard, then 2 logo concepts</li><li>3 logo variations: primary, secondary and logomark</li><li>Brand guide: clearance and sizing, colour palette with tints and shades, fonts and weights</li><li>Iconography (4 icons), photography style (4 images) and 1 brand asset</li><li>Your choice of 1 template (stationery with business card and letterhead, email signature, social banners or social posts)</li></ul>',
+      t:'<b>Brand Kit (R18,000)</b><ul><li>Questionnaire and moodboard, then 2 logo concepts</li><li>3 logo variations: primary, secondary and logomark</li><li>Brand guide: clearance and sizing, colour palette with tints and shades, fonts and weights</li><li>Iconography (4 icons), photography style (4 images) and 1 brand asset</li><li>Your choice of 1 template (stationery with business card and letterhead, email signature, social banners or social posts)</li></ul>',
       c:['inc_signature','choose',{l:'Enquire about Brand Kit',a:'contact:Brand Kit'}]},
     inc_signature:{l:'What’s in Signature?',k:['signature'],
-      t:'<b>Signature (R28,500)</b><ul><li>Questionnaire and moodboard, then 3 logo concepts</li><li>4 logo variations: primary, secondary, wordmark and logomark</li><li>Brand guide: clearance and sizing, misuse examples, full colour palette with hierarchy, fonts, weights and type in use</li><li>Iconography (8 icons), photography style (8 images) and 2 brand assets</li><li>Your choice of 2 templates (stationery with business card and letterhead, email signature, social banners or social posts)</li></ul>',
+      t:'<b>Signature (R27,500)</b><ul><li>Questionnaire and moodboard, then 3 logo concepts</li><li>4 logo variations: primary, secondary, wordmark and logomark</li><li>Brand guide: clearance and sizing, misuse examples, full colour palette with hierarchy, fonts, weights and type in use</li><li>Iconography (8 icons), photography style (8 images) and 2 brand assets</li><li>Your choice of 2 templates (stationery with business card and letterhead, email signature, social banners or social posts)</li></ul>',
       c:['inc_premium','choose',{l:'Enquire about Signature',a:'contact:Signature'}]},
     inc_premium:{l:'What’s in Premium?',k:['premium','animation','logo reveal'],
-      t:'<b>Premium (R43,000)</b><ul><li>Questionnaire and moodboard, then 3 logo concepts</li><li>4 logo variations, plus a logo reveal animation</li><li>Full brand foundation: story, mission and vision, positioning and brand values, and tone of voice</li><li>Brand guide with misuse examples, full colour palette, fonts, weights, type in use and type spacing</li><li>Iconography (8), photography style (8) and 2 brand assets</li><li>Full template set: stationery (business card and letterhead), email signature, 2 social banners and 4 social post templates</li></ul>',
+      t:'<b>Premium (R42,000)</b><ul><li>Questionnaire and moodboard, then 3 logo concepts</li><li>4 logo variations, plus a logo reveal animation</li><li>Full brand foundation: story, mission and vision, positioning and brand values, and tone of voice</li><li>Brand guide with misuse examples, full colour palette, fonts, weights, type in use and type spacing</li><li>Iconography (8), photography style (8) and 2 brand assets</li><li>Full template set: stationery (business card and letterhead), email signature, 2 social banners and 4 social post templates</li></ul>',
       c:['inc_signature','custom',{l:'Enquire about Premium',a:'contact:Premium'}]},
     choose:{l:'Help me choose',k:['choose','recommend','which package','best for','not sure','suggest','budget'],
       t:'Which budget range is closest? These match the ranges on the enquiry form.',
       c:[{l:'Under R10,000',to:'r1'},{l:'R10,000 – R30,000',to:'r2'},{l:'R30,000 – R50,000',to:'r3'},{l:'R50,000+',to:'r4'}]},
     r1:{t:'<b>Starter (R9,000)</b> fits this range: two logo marks plus a basic brand guide. If you only need a logo, the custom calculator starts lower.',c:['inc_starter','custom']},
-    r2:{t:'<b>Brand Kit (R18,500)</b> or <b>Signature (R28,500)</b> fit here. Signature adds a fourth logo variation, more guide pages and one extra template, and is marked “Most Value” on the site.',c:['inc_brandkit','inc_signature']},
-    r3:{t:'<b>Premium (R43,000)</b> fits here: the most complete package, with a brand foundation, full templates and a logo reveal animation.',c:['inc_premium','custom']},
-    r4:{t:'<b>Premium (R43,000)</b> covers the full identity. For anything beyond it, such as motion graphics, social media or ongoing design support, a custom package can be scoped for you.',c:['inc_premium','services',{l:'Start an enquiry',a:'contact'}]},
+    r2:{t:'<b>Brand Kit (R18,000)</b> or <b>Signature (R27,500)</b> fit here. Signature adds a fourth logo variation, more guide pages and one extra template, and is marked “Most Value” on the site.',c:['inc_brandkit','inc_signature']},
+    r3:{t:'<b>Premium (R42,000)</b> fits here: the most complete package, with a brand foundation, full templates and a logo reveal animation.',c:['inc_premium','custom']},
+    r4:{t:'<b>Premium (R42,000)</b> covers the full identity. For anything beyond it, such as motion graphics, social media or ongoing design support, a custom package can be scoped for you.',c:['inc_premium','services',{l:'Start an enquiry',a:'contact'}]},
     time:{k:['how long','timeline','lead time','turnaround','duration','weeks','days','week','process','steps','when will','deadline','fast','quick','how soon'],
       t:'<b>The process has four steps</b><ul><li><b>Discover:</b> typically 1–2 days, starting once the 50% deposit has cleared</li><li><b>Define:</b> typically 1–2 weeks (moodboarding, concepts, final logo approval)</li><li><b>Design:</b> typically 1–2 weeks (full brand identity and a complete first draft)</li><li><b>Deliver:</b> typically 1–2 days (files prepared and delivered)</li></ul>Adding the steps together comes to roughly 2½ to 4½ weeks. Revisions happen within Define and Design.<small>Timelines are estimates and can change with feedback, approvals and project requirements.</small>',
       c:['pay','rev','quote']},
