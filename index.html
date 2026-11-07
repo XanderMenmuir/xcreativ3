@@ -3834,14 +3834,14 @@ function closeMobileNav() {
 
   var GROUPS = [
     { title: 'Logo Development', note: '2 x revision per element',
-      merge: { name: 'Logo Development', icon: 'concepts', columns: [['moodboard','concepts'],['variations','animation']], hint: 'Choose how many concepts you would like to see, then how many final logo variations you need.' },
+      merge: { name: 'Logo Development', icon: 'concepts', columns: [['moodboard','concepts'],['variations','animation']], hint: 'Choose how many concepts you would like to see, then how many final logo variations you need. Each concept includes the variations you choose.' },
       sections: [
       { id:'moodboard', name:'Questionnaire & Moodboard', options:[
         { id:'mb', label:'Included in every package', detail:'A questionnaire to understand you and your company, followed by a moodboard phase to agree on the visual direction of the logo', price:0, incl:true, locked:true } ] },
       { id:'concepts', name:'Logo Concepts', options:[
-        { id:'c2', label:'2 concepts', detail:'2 logo concepts to choose from', price:2000, add:true, incl:true },
-        { id:'c3', label:'3 concepts', detail:'3 logo concepts to choose from', price:3000, add:true },
-        { id:'c4', label:'4 concepts', detail:'4 logo concepts to choose from', price:4000, add:true } ] },
+        { id:'c2', label:'2 concepts', detail:'2 logo concepts to choose from, each including your chosen final logo variations', price:2000, add:true, incl:true },
+        { id:'c3', label:'3 concepts', detail:'3 logo concepts to choose from, each including your chosen final logo variations', price:3000, add:true },
+        { id:'c4', label:'4 concepts', detail:'4 logo concepts to choose from, each including your chosen final logo variations', price:4000, add:true } ] },
       { id:'variations', name:'Final Logo Variations', options:[
         { id:'v2', label:'2 variations', detail:'Primary & Logomark', price:3000, add:true, incl:true },
         { id:'v3', label:'3 variations', detail:'Primary, Secondary & Logomark', price:4500, add:true },
@@ -4184,7 +4184,7 @@ function closeMobileNav() {
       var o = lookup[sec.id][id];
       if (!o || (optPrice(pk.pick, sec.id, o) === 0 && !o.add && !o.locked)) return null;
       if (sec.id === 'variations') return o.label.replace(/s$/, '') + 's (' + o.detail + ')';
-      if (sec.id === 'concepts') return o.label.replace('concepts', 'Logo Concepts').replace(/^(\d) /, '$1 x ');
+      if (sec.id === 'concepts') return o.label.replace('concepts', 'Logo Concepts').replace(/^(\d) /, '$1 x ') + ' (each including your final logo variations)';
       return DETAIL_SECS[sec.id] && o.detail ? o.detail : o.label;
     }).filter(Boolean);
   }
