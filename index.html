@@ -862,6 +862,7 @@ section { padding: 7rem 0; width: 100%; }
 .calc-opt-free .calc-opt-body { opacity: 0.55; filter: grayscale(1); border-color: var(--border-dark) !important; background: rgba(255,255,255,0.04) !important; }
 .calc-opt-free .calc-radio { background: rgba(255,255,255,0.35) !important; border-color: rgba(255,255,255,0.35) !important; }
 .calc-opt-free:hover .calc-opt-body { border-color: var(--border-dark); }
+.calc-opt-free .calc-opt-price { color: var(--muted-dark) !important; }
 .calc-min {
   display: none; position: absolute; top: 0.55rem; right: 0.6rem;
   width: 34px; height: 34px; border-radius: 50%; cursor: pointer; place-items: center;
@@ -4111,7 +4112,7 @@ function closeMobileNav() {
         }
         if (s.guide) i.disabled = !locked || !!i.dataset.base;
         if (o.locked) { i.disabled = true; i.closest('.calc-opt').classList.add('calc-opt-locked', 'calc-opt-free'); }
-        if (i.dataset.base) i.closest('.calc-opt').classList.toggle('calc-opt-locked', locked);
+        if (i.dataset.base) i.closest('.calc-opt').classList.toggle('calc-opt-locked', locked), i.closest('.calc-opt').classList.toggle('calc-opt-free', locked);
       });
       card.classList.toggle('calc-sec-off', !!s.guide && !locked);
       var ab = card.querySelector('[data-all]');
