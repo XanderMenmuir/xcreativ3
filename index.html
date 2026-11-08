@@ -1473,7 +1473,7 @@ nav.scrolled {
   border-bottom-color: rgba(255,255,255,0.12);
 }
 
-/* HERO TEXT ENTRANCE — triggered by JS after loader hides */
+/* HERO TEXT ENTRANCE - triggered by JS after loader hides */
 .hero-tag, .hero-headline, .hero-sub, .hero-actions, .hero-scroll { opacity: 0; transform: translateY(22px); }
 .hero-tag.hero-in { animation: heroFadeUp 0.8s cubic-bezier(0.22,1,0.36,1) forwards; }
 .hero-headline.hero-in { animation: heroFadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.1s forwards; }
@@ -2191,6 +2191,154 @@ nav.scrolled {
   display: block;
   filter: brightness(0) invert(1);
 }
+
+/* ===== CALCULATOR LAYOUT: two-pane (package rail + step-by-step builder) in the site's own dark / red branding =====
+   Scoped to #calcModal with .nc- class names so the "What's included" popup and the rest of the site are unaffected. */
+#calcModal { --nc-line: rgba(255,255,255,0.09); --nc-tile: rgba(255,255,255,0.14); --nc-hot: #ff4d5a; }
+#calcModal .nc-layout { display: grid; grid-template-columns: minmax(320px, 390px) minmax(0, 1fr); min-height: 100vh; font-family: 'Montserrat', sans-serif; color: var(--white); }
+#calcModal .nc-rail { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: radial-gradient(circle at 0% 0%, rgba(180,0,13,0.28) 0%, transparent 55%), var(--off-black); border-right: 1px solid var(--border-dark); padding: 1.6rem 1.6rem 1.8rem; display: flex; flex-direction: column; gap: 1.6rem; }
+#calcModal .nc-rail-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+#calcModal .nc-brand { display: block; line-height: 0; }
+#calcModal .nc-logo { height: 24px; width: auto; display: block; }
+#calcModal .nc-tag { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--grey); border: 1px solid rgba(255,255,255,0.22); border-radius: 999px; padding: 0.3rem 0.85rem; white-space: nowrap; }
+#calcModal .nc-presets-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-dark); margin-bottom: 0.8rem; }
+#calcModal .nc-presets { display: grid; gap: 0.55rem; }
+#calcModal .nc-preset { cursor: pointer; display: grid; grid-template-columns: 1fr auto; column-gap: 0.8rem; align-items: center; text-align: left; padding: 0.8rem 1.05rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.16); background: transparent; color: var(--white); font-family: 'Montserrat', sans-serif; transition: all 0.25s ease; }
+#calcModal .nc-preset b { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
+#calcModal .nc-preset small { font-size: 0.78rem; color: var(--muted-dark); font-weight: 600; transition: color 0.25s; }
+#calcModal .nc-preset:hover { border-color: var(--white); }
+#calcModal .nc-preset.active { background: var(--red); border-color: var(--red); }
+#calcModal .nc-preset.active small { color: rgba(255,255,255,0.85); }
+#calcModal .nc-preset:focus-visible { outline: 2px solid var(--nc-hot); outline-offset: 2px; }
+
+/* rail summary */
+#calcModal .nc-summary { margin-top: auto; position: relative; background: var(--card-dark); color: var(--white); border: 1px solid rgba(255,255,255,0.14); border-radius: 22px; padding: 1.3rem 1.4rem 1.4rem; box-shadow: 0 18px 44px rgba(0,0,0,0.6); }
+#calcModal .nc-total-label { font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-dark); font-weight: 600; }
+#calcModal .nc-total { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: var(--white); }
+#calcModal .nc-status { font-size: 0.74rem; color: var(--muted-dark); margin-top: 0.2rem; line-height: 1.5; }
+#calcModal .nc-status.match { color: #fff; }
+#calcModal .nc-status.match::before { content: '\2713'; display: inline-grid; place-items: center; width: 16px; height: 16px; background: var(--red); border-radius: 50%; font-size: 0.55rem; margin-right: 0.45rem; vertical-align: 1px; }
+#calcModal .nc-cta { display: block; margin-top: 1rem; text-align: center; text-decoration: none; cursor: pointer; padding: 0.95rem 1.4rem; border-radius: 999px; background: var(--red); border: 1px solid var(--red); color: var(--white); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; transition: background 0.25s, border-color 0.25s; }
+#calcModal .nc-cta:hover { background: var(--red-dark); border-color: var(--red-dark); }
+#calcModal .nc-cta:focus-visible { outline: 2px solid var(--nc-hot); outline-offset: 3px; }
+#calcModal .nc-min { display: none; position: absolute; top: 0.55rem; right: 0.6rem; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; place-items: center; background: var(--red); border: 1px solid var(--red); color: var(--white); transition: background 0.2s, transform 0.3s; }
+#calcModal .nc-min svg { width: 16px; height: 16px; }
+#calcModal .nc-min:hover { background: var(--red-dark); border-color: var(--red-dark); }
+#calcModal .nc-summary.min .nc-min { transform: rotate(180deg); }
+
+/* working area */
+#calcModal .nc-main { padding: 4.2rem clamp(1.5rem, 5vw, 4.5rem) 3rem; max-width: 980px; width: 100%; text-align: left; }
+#calcModal .nc-head { margin-bottom: 1rem; }
+#calcModal .nc-eyebrow { display: inline-block; font-size: 0.57rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.26rem 0.75rem; background: var(--red); color: var(--white); font-weight: 700; border-radius: 999px; margin-bottom: 1.1rem; }
+#calcModal .nc-title { font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 600; letter-spacing: -0.02em; color: var(--white); line-height: 1.12; margin-bottom: 0.9rem; }
+#calcModal .nc-title span { color: inherit; }
+#calcModal .nc-sub { font-size: 0.88rem; color: var(--muted-dark); line-height: 1.75; max-width: 620px; }
+
+#calcModal #calcBody { counter-reset: step; }
+#calcModal .nc-group-title { counter-increment: step; display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: clamp(1.2rem, 2.6vw, 1.55rem); font-weight: 600; letter-spacing: -0.01em; color: var(--white); margin: 2.8rem 0 0.4rem; padding-bottom: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.22); }
+#calcModal .nc-group-title::before { content: counter(step, decimal-leading-zero); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; color: var(--nc-hot); }
+#calcModal .nc-group-note { font-weight: 500; color: var(--muted-dark); font-size: 0.72rem; letter-spacing: 0.04em; }
+#calcModal .nc-group-intro { font-size: 0.8rem; color: var(--muted-dark); line-height: 1.7; margin: 0.8rem 0 0.4rem; max-width: 720px; }
+#calcModal .nc-grid { display: block; margin-bottom: 0.5rem; }
+#calcModal .nc-sec { padding: 1.6rem 0 1.5rem; border-bottom: 1px solid var(--nc-line); }
+#calcModal .nc-sec-head { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+#calcModal .nc-ico { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; background: rgba(180,0,13,0.18); color: var(--nc-hot); }
+#calcModal .nc-ico svg { width: 18px; height: 18px; }
+#calcModal .nc-sec-name { flex: 1; font-size: 0.95rem; font-weight: 600; color: var(--white); line-height: 1.25; }
+#calcModal .nc-sec-hint { display: block; font-size: 0.7rem; font-weight: 400; color: var(--muted-dark); margin-top: 0.15rem; line-height: 1.5; }
+#calcModal .nc-all { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 600; color: var(--nc-hot); background: none; border: none; padding: 0; margin-left: 0.4rem; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+#calcModal .nc-all:hover { color: var(--white); }
+#calcModal .nc-all:disabled { cursor: default; }
+#calcModal .nc-sec-price { font-size: 0.95rem; font-weight: 700; color: var(--nc-hot); white-space: nowrap; transition: transform 0.25s; }
+#calcModal .nc-sec-price.bump { transform: scale(1.12); }
+
+/* option tiles */
+#calcModal .nc-opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 10px; }
+#calcModal .nc-opt { position: relative; display: block; cursor: pointer; }
+#calcModal .nc-opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+#calcModal .nc-opt-body { height: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: 0.7rem; padding: 0.8rem 0.95rem; border-radius: 14px; border: 1px solid var(--border-dark); background: transparent; transition: all 0.2s ease; }
+#calcModal .nc-radio { width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid rgba(255,255,255,0.35); position: relative; transition: all 0.2s; }
+#calcModal .nc-radio::after { content: ''; position: absolute; inset: 2px; border-radius: 50%; background: var(--white); transform: scale(0); transition: transform 0.2s; }
+#calcModal .nc-radio.nc-check { border-radius: 4px; }
+#calcModal .nc-radio.nc-check::after { inset: 0; border-radius: 0; background: none; border: solid var(--white); border-width: 0 2px 2px 0; width: 4px; height: 8px; margin: auto; top: 0; left: 0; right: 0; bottom: 1px; transform: rotate(45deg) scale(0); }
+#calcModal .nc-opt-text { min-width: 0; }
+#calcModal .nc-opt-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--white); line-height: 1.3; }
+#calcModal .nc-opt-detail { display: block; font-size: 0.7rem; color: var(--muted-dark); line-height: 1.45; margin-top: 0.15rem; }
+#calcModal .nc-opt-price { font-size: 0.74rem; font-weight: 600; color: var(--muted-dark); white-space: nowrap; }
+#calcModal .nc-opt:hover .nc-opt-body { border-color: rgba(255,255,255,0.35); }
+#calcModal .nc-opt input:focus-visible + .nc-opt-body { outline: 2px solid var(--nc-hot); outline-offset: 2px; }
+#calcModal .nc-opt input:checked + .nc-opt-body { border-color: var(--red); background: rgba(180,0,13,0.16); }
+#calcModal .nc-opt input:checked + .nc-opt-body .nc-radio { background: var(--red); border-color: var(--red); }
+#calcModal .nc-opt input:checked + .nc-opt-body .nc-radio::after { transform: scale(1); }
+#calcModal .nc-opt input:checked + .nc-opt-body .nc-radio.nc-check::after { transform: rotate(45deg) scale(1); }
+#calcModal .nc-opt input:checked + .nc-opt-body .nc-opt-price { color: var(--nc-hot); }
+#calcModal .nc-opt-tag { display: none; margin-left: 0.5rem; padding: 0.1rem 0.5rem; border-radius: 999px; vertical-align: 1px; font-size: 0.54rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(255,255,255,0.1); color: var(--muted-dark); }
+#calcModal .nc-opt-locked .nc-opt-tag, #calcModal .nc-opt-tag.always { display: inline-block; }
+#calcModal .nc-opt-locked, #calcModal .nc-opt-locked input { cursor: not-allowed; }
+#calcModal .nc-opt-free .nc-opt-body { opacity: 0.55; filter: grayscale(1); border-color: var(--border-dark) !important; background: rgba(255,255,255,0.04) !important; }
+#calcModal .nc-opt-free .nc-radio { background: rgba(255,255,255,0.35) !important; border-color: rgba(255,255,255,0.35) !important; }
+#calcModal .nc-opt-free:hover .nc-opt-body { border-color: var(--border-dark) !important; }
+#calcModal .nc-opt-free .nc-opt-price { color: var(--muted-dark) !important; }
+
+/* merged logo block */
+#calcModal .nc-parts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.8rem; }
+#calcModal .nc-part-label { display: flex; align-items: center; gap: 0.6rem; margin: 0.2rem 0 0.7rem; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-dark); }
+#calcModal .nc-part-label span { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(180,0,13,0.2); color: var(--nc-hot); font-size: 0.6rem; letter-spacing: 0; }
+#calcModal .nc-part-opt { font-style: normal; font-weight: 500; letter-spacing: 0.06em; text-transform: none; font-size: 0.66rem; color: var(--muted-dark); margin-left: 0.2rem; }
+#calcModal .nc-part-opt::before { content: '\00b7  '; }
+#calcModal .nc-col .nc-part + .nc-part { margin-top: 1.4rem; }
+#calcModal .nc-col .nc-opts { grid-template-columns: 1fr; }
+
+/* brand guide switch */
+#calcModal .nc-guide-toggle { display: flex; align-items: center; gap: 1rem; cursor: pointer; position: relative; padding: 1.1rem 1.3rem; margin: 1.2rem 0 0.4rem; border-radius: 22px; background: var(--card-dark); border: 1px solid var(--border-dark); transition: border-color 0.25s; }
+#calcModal .nc-guide-toggle:hover { border-color: rgba(180,0,13,0.5); }
+#calcModal .nc-guide-toggle input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+#calcModal .nc-switch { flex-shrink: 0; width: 46px; height: 26px; border-radius: 999px; position: relative; background: rgba(255,255,255,0.16); transition: background 0.25s; }
+#calcModal .nc-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--white); transition: transform 0.25s; }
+#calcModal .nc-guide-toggle input:checked ~ .nc-switch { background: var(--red); }
+#calcModal .nc-guide-toggle input:checked ~ .nc-switch::after { transform: translateX(20px); }
+#calcModal .nc-guide-toggle input:focus-visible ~ .nc-switch { outline: 2px solid var(--nc-hot); outline-offset: 3px; }
+#calcModal .nc-guide-text { flex: 1; min-width: 0; }
+#calcModal .nc-guide-text b { display: block; font-size: 0.92rem; font-weight: 600; color: var(--white); }
+#calcModal .nc-guide-text small { display: block; font-size: 0.72rem; color: var(--muted-dark); line-height: 1.6; margin-top: 0.25rem; }
+#calcModal .nc-guide-price { display: block; margin-top: 0.5rem; font-size: 0.74rem; font-weight: 600; color: var(--nc-hot); }
+#calcModal .nc-sec-off { opacity: 0.35; pointer-events: none; filter: grayscale(1); }
+#calcModal .nc-note { font-size: 0.68rem; color: var(--muted-dark); margin: 2rem 0 0; }
+
+/* tablet + phone: rail becomes a header bar, package grid and a sticky total */
+@media (max-width: 900px) {
+  #calcModal .nc-layout { display: flex; flex-direction: column; }
+  #calcModal .nc-rail { display: contents; }
+  #calcModal .nc-rail-top { order: 0; background: var(--off-black); border-bottom: 1px solid var(--border-dark); padding: 1rem 1.25rem; }
+  #calcModal .nc-logo { height: 22px; }
+  #calcModal .nc-tag { display: none; }
+  #calcModal .nc-head { order: 1; padding: 1.6rem 1.25rem 0; margin-bottom: 0; }
+  #calcModal .nc-rail-presets { order: 2; padding: 1.2rem 1.25rem 0; }
+  #calcModal .nc-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; padding-bottom: 0.6rem; }
+  #calcModal .nc-preset-custom { grid-column: 1 / -1; }
+  #calcModal .nc-preset { min-width: 0; padding: 0.7rem 0.85rem; column-gap: 0.5rem; }
+  #calcModal .nc-main { display: contents; }
+  #calcModal #calcBody { order: 3; padding: 0 1.25rem; }
+  #calcModal .nc-note { order: 3; padding: 0 1.25rem 1.5rem; }
+  #calcModal .nc-summary { order: 4; position: sticky; bottom: 0.75rem; z-index: 5; margin: 0 0.75rem 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; flex-wrap: wrap; background: rgba(28,28,28,0.96); backdrop-filter: blur(14px); }
+  #calcModal .nc-summary .nc-cta { margin-top: 0; min-width: 220px; }
+  #calcModal .nc-parts { grid-template-columns: 1fr; gap: 1.2rem; }
+}
+@media (max-width: 700px) {
+  #calcModal .nc-min { display: grid; }
+  #calcModal .nc-summary { padding-right: 3.6rem; }
+  #calcModal .nc-summary .nc-cta { width: 100%; min-width: 0; }
+  #calcModal .nc-summary.min { padding: 0.55rem 3.6rem 0.55rem 1.1rem; flex-wrap: nowrap; border-radius: 999px; min-height: 52px; }
+  #calcModal .nc-summary.min > div { display: flex; align-items: baseline; gap: 0.7rem; }
+  #calcModal .nc-summary.min .nc-status, #calcModal .nc-summary.min .nc-cta { display: none; }
+  #calcModal .nc-summary.min .nc-total { font-size: 1.25rem; }
+  #calcModal .nc-summary.min .nc-min { top: 50%; margin-top: -17px; }
+  #calcModal .nc-total { font-size: 1.8rem; }
+  #calcModal .nc-guide-toggle { flex-wrap: wrap; }
+}
+/* prices are shown only in the left panel (packages + total); hidden on the building blocks */
+#calcModal .nc-sec-price, #calcModal .nc-opt-price, #calcModal .nc-guide-price { display: none !important; }
+@media (prefers-reduced-motion: reduce) { #calcModal * { transition: none !important; } }
 </style>
 </head>
 <body>
@@ -2467,12 +2615,12 @@ nav.scrolled {
 
   </div>
   <div style="text-align:center; margin-top:1.5rem;">
-    <button type="button" class="packages-callout reveal reveal-delay-3" id="packagesCallout" data-open-calc aria-label="Open the package calculator">
+    <button type="button" class="packages-callout reveal reveal-delay-3" id="packagesCallout" data-open-calc aria-label="Open the package builder">
         <span class="packages-callout-eyebrow">Custom package</span>
         <span class="packages-callout-text">Pick what you need. Get an estimate.</span>
         <span class="packages-callout-cta">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2.5" width="14" height="19" rx="2.5"/><path d="M8.5 7h7"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></svg>
-          Open Calculator
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg>
+          Open Package Builder
         </span>
         <span class="packages-callout-note">Logo only from R5,000</span>
       </button>
@@ -2496,7 +2644,7 @@ nav.scrolled {
         <h3 class="process-step-title">Discover</h3>
       </div>
       <span class="process-step-duration">Typically 1-2 Days</span>
-      <p class="process-step-body">Once the 50% deposit has cleared, we start with a structured questionnaire to understand your goals, audience, positioning and vision.</p>
+      <p class="process-step-body">Once the 50% deposit has cleared and the onboarding form has been completed, we start with a structured questionnaire to understand your goals, audience, positioning and vision.</p>
     </div>
     <div class="process-step reveal reveal-delay-1">
       <div class="process-step-top">
@@ -3783,37 +3931,46 @@ function closeMobileNav() {
 
 <!-- CUSTOM PACKAGE CALCULATOR MODAL -->
 <div class="calc-modal" id="calcModal" role="dialog" aria-modal="true" aria-labelledby="calcTitle" aria-hidden="true">
-  <button type="button" class="calc-close" id="calcClose" aria-label="Close calculator">
+  <button type="button" class="calc-close" id="calcClose" aria-label="Close package builder">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
     Close
   </button>
-  <div class="pkg-calc" id="pkgCalc">
-    <div class="calc-head">
-      <span class="calc-eyebrow">Packages &amp; Pricing Builder</span>
-      <h3 class="calc-title" id="calcTitle">Explore &amp; <span>Build Your Package</span></h3>
-      <p class="calc-sub">Choose a curated package to see its full price and everything that&rsquo;s included, or customise any section to build your own. Prices update as you go.</p>
-    </div>
-    <p class="calc-presets-label">Start from a package</p>
-    <div class="calc-presets" id="calcPresets"></div>
-    <div id="calcBody"></div>
-    <div class="calc-summary" id="calcSummary">
-      <button type="button" class="calc-min" id="calcMin" aria-expanded="true" aria-label="Minimise total bar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div>
-        <p class="calc-total-label">Estimated total</p>
-        <p class="calc-total" id="calcTotal" aria-live="polite">R0</p>
-        <p class="calc-status" id="calcStatus"></p>
+  <div class="nc-layout">
+    <aside class="nc-rail">
+      <div class="nc-rail-top">
+        <span class="nc-brand"><img class="nc-logo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NDguOTkgMTQ4LjM2Ij4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjZGZkZmUwOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8ZyBpZD0iTGF5ZXJfMS0yIiBkYXRhLW5hbWU9IkxheWVyIDEiPgogICAgPGc+CiAgICAgIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTU5OC4xOCwwYy0zLjYzLDAtNi42NCwxLjE2LTkuMDQsMy41LTIuNCwyLjMzLTMuNiw1LjI1LTMuNiw4Ljc1czEuMTksNi4yMiwzLjYsOC41NmMyLjQsMi4zMyw1LjQxLDMuNSw5LjA0LDMuNXM2LjgxLTEuMiw5LjE0LTMuNmMyLjMzLTIuNCwzLjUtNS4zNSwzLjUtOC44NXMtMS4yLTYuMTktMy42LTguNDZjLTIuNC0yLjI3LTUuNDEtMy40LTkuMDQtMy40WiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNDMuNTgsNjMuOTdjNS4zMS0yLjk4LDExLjM0LTQuNDcsMTguMDgtNC40Nyw1LjU3LDAsMTAuNzksMS4yLDE1LjY1LDMuNiw0Ljg2LDIuNCw4Ljk3LDYuMTIsMTIuMzUsMTEuMThsMTQuMTktOS4xNGMtNC4wMi03LjI2LTkuNjktMTIuNzQtMTcuMDEtMTYuNDMtNy4zMy0zLjctMTUuNjUtNS41NC0yNC45OS01LjU0LTEwLjUsMC0xOS44NiwyLjI0LTI4LjEsNi43MS04LjIzLDQuNDctMTQuNjgsMTAuNjYtMTkuMzQsMTguNTctNC42Nyw3LjkxLTcsMTYuOTgtNywyNy4yMnMyLjM0LDE5LjMxLDcsMjcuMjJjNC42Niw3LjkxLDExLjExLDE0LjEzLDE5LjM0LDE4LjY2LDguMjMsNC41NCwxNy42LDYuODEsMjguMSw2LjgxLDkuMzMsMCwxNy42Ni0xLjkxLDI0Ljk5LTUuNzQsNy4zMi0zLjgyLDEyLjk5LTkuMywxNy4wMS0xNi40M2wtMTQuMTktOC45NGMtMy4zNyw1LjA2LTcuNDksOC43OS0xMi4zNSwxMS4xOC00Ljg2LDIuNC0xMC4wOCwzLjYtMTUuNjUsMy42LTYuNzQsMC0xMi43Ny0xLjQ5LTE4LjA4LTQuNDctNS4zMi0yLjk4LTkuNTMtNy4xOS0xMi42NC0xMi42NC0zLjExLTUuNDQtNC42Ny0xMS44Ni00LjY3LTE5LjI1czEuNTYtMTMuNzcsNC42Ny0xOS4xNWMzLjExLTUuMzgsNy4zMi05LjU2LDEyLjY0LTEyLjU0WiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0yMzYuODIsNjEuNjJ2LTE3LjQ4aC0xNy44OXYxMDMuMDZoMTguNjd2LTUxLjMzYzAtMTEuMjgsMi45Mi0xOS45LDguNzUtMjUuODYsNS44My01Ljk2LDEzLjc0LTguOTQsMjMuNzItOC45NGgyLjA0Yy43MSwwLDEuNDYuMDcsMi4yNC4xOXYtMTguMDhjLTkuODUsMC0xOC4xNSwxLjg4LTI0Ljg5LDUuNjQtNS41NiwzLjEtOS43Myw3LjQyLTEyLjY0LDEyLjgyWiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0zNjIuNyw0OS43OGMtNy42NS00LjQtMTYuNDctNi42MS0yNi40NS02LjYxcy0xOC43LDIuMjQtMjYuNTQsNi43MWMtNy44NCw0LjQ3LTE0LDEwLjY2LTE4LjQ3LDE4LjU3LTQuNDcsNy45MS02LjcxLDE2Ljk4LTYuNzEsMjcuMjJzMi4zLDE5LjMxLDYuOSwyNy4yMmM0LjYsNy45MSwxMS4wOCwxNC4xMywxOS40NSwxOC42Niw4LjM2LDQuNTQsMTguMDUsNi44MSwyOS4wNyw2LjgxLDguNTYsMCwxNi4zLTEuNDMsMjMuMjQtNC4yOCw2LjkzLTIuODUsMTIuNzQtNywxNy40LTEyLjQ0bC0xMC4zMS0xMi4wNmMtMy43Niw0LjE1LTguMTQsNy4yNi0xMy4xMiw5LjMzLTQuOTksMi4wOC0xMC41NCwzLjExLTE2LjYyLDMuMTEtNy4zOSwwLTEzLjk0LTEuNDktMTkuNjQtNC40Ny01LjcxLTIuOTgtMTAuMTQtNy4xNi0xMy4zMi0xMi41NC0yLjM0LTMuOTYtMy44MS04LjM0LTQuNDItMTMuMTJoODMuNjZjLjEzLS45MS4yMi0xLjg4LjI5LTIuOTIuMDctMS4wMy4xLTEuOTQuMS0yLjcyLDAtMTAuNjMtMi4xNy0xOS45My02LjUxLTI3LjktNC4zNC03Ljk3LTEwLjM0LTE0LjE2LTE3Ljk5LTE4LjU3Wk0zMTguOTUsNjMuMjljNS4wNi0yLjkyLDEwLjgyLTQuMzcsMTcuMzEtNC4zN3MxMi40MSwxLjQ2LDE3LjQsNC4zN2M0Ljk5LDIuOTIsOC45MSw2Ljk3LDExLjc2LDEyLjE1LDIuMTYsMy45MywzLjQ2LDguMjgsMy45MSwxMy4wM2gtNjYuMjNjLjU0LTQuNzIsMS44Ny05LjAzLDMuOTktMTIuOTMsMi44NS01LjI1LDYuODEtOS4zMywxMS44Ni0xMi4yNVoiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNDQ3LjY3LDQzLjE3Yy04LjE3LDAtMTUuOTgsMS4xMy0yMy40MywzLjQtNy40NiwyLjI3LTEzLjg0LDUuNTQtMTkuMTUsOS44Mmw3Ljc4LDE0YzQuMDItMy4zNyw4Ljk0LTYuMDYsMTQuNzgtOC4wNyw1LjgzLTIuMDEsMTEuNzktMy4wMiwxNy44OS0zLjAyLDkuMiwwLDE2LjEsMi4xNywyMC43MSw2LjUyLDQuNiw0LjM0LDYuOSwxMC40Nyw2LjksMTguMzd2My42OWgtMjkuNTVjLTEwLjI0LDAtMTguMzcsMS4zNi0yNC40LDQuMDgtNi4wMywyLjcyLTEwLjM3LDYuMzUtMTMuMDMsMTAuODktMi42Niw0LjU0LTMuOTksOS41OS0zLjk5LDE1LjE3czEuNTYsMTEuMDUsNC42NywxNS42NWMzLjExLDQuNiw3LjU1LDguMiwxMy4zMiwxMC43OSw1Ljc3LDIuNTksMTIuNDcsMy44OSwyMC4xMiwzLjg5LDkuNDYsMCwxNy4zMS0xLjc4LDIzLjUzLTUuMzUsNC4zOS0yLjUxLDcuNzktNS42OSwxMC4zMS05LjQ2djEzLjY0aDE3Ljd2LTYyLjIyYzAtMTQuMTMtMy44My0yNC42My0xMS40Ny0zMS41LTcuNjUtNi44Ny0xOC41NC0xMC4zMS0zMi42Ny0xMC4zMVpNNDYxLjc3LDEyOS4zYy01LjI1LDMuMTEtMTEuMzcsNC42Ny0xOC4zNyw0LjY3cy0xMi43MS0xLjUyLTE2LjcyLTQuNTdjLTQuMDItMy4wNS02LjAzLTcuMS02LjAzLTEyLjE1LDAtNC40LDEuNjItOC4xNyw0Ljg2LTExLjI4LDMuMjQtMy4xMSw5LjUzLTQuNjcsMTguODYtNC42N2gyOC43OHYxNC4zOWMtMi4zMyw1Ljk3LTYuMTIsMTAuNS0xMS4zNywxMy42MVoiLz4KICAgICAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNTQyLjE2LDIxLjU4aC0xOC42NnYyMi41NWgtMTcuNXYxNS4zN2gxNy41djU2LjU4YzAsMTAuMzcsMi44NCwxOC4zNCw4LjU2LDIzLjkxLDUuNyw1LjU3LDEzLjczLDguMzYsMjQuMTEsOC4zNiw0LjI4LDAsOC4zOS0uNTcsMTIuMzQtMS43NSwxLjEyLS4zMywyLjE5LS43MSwzLjIyLTEuMTR2LTE2LjgyYy0zLjY3LDIuNjQtOC4xNSwzLjk2LTEzLjQzLDMuOTZzLTkuMTctMS40OC0xMS45Ni00LjQ3Yy0yLjc5LTIuOTgtNC4xOC03LjI1LTQuMTgtMTIuODN2LTU1LjhoMjkuNTZ2LTE1LjM3aC0yOS41NnYtMjIuNTVaIi8+CiAgICAgIDxyZWN0IGNsYXNzPSJjbHMtMSIgeD0iNTg4Ljg1IiB5PSI0NC4xNCIgd2lkdGg9IjE4LjY3IiBoZWlnaHQ9IjEwMy4wNiIvPgogICAgICA8cG9seWdvbiBjbGFzcz0iY2xzLTEiIHBvaW50cz0iNjc2LjUxIDEyNi43IDY0MS4wNyA0NC4xNCA2MjEuNjMgNDQuMTQgNjY2Ljc0IDE0Ny4xOSA2ODUuNzkgMTQ3LjE5IDczMC45MSA0NC4xNCA3MTIuNjMgNDQuMTQgNjc2LjUxIDEyNi43Ii8+CiAgICAgIDxwb2x5Z29uIGNsYXNzPSJjbHMtMSIgcG9pbnRzPSI5OS43NSA0NC4xNCA3OS4zMyA0NC4xNCA1MS4wNCA4MS4yOSAyMi43NSA0NC4xNCAxLjk1IDQ0LjE0IDQwLjU4IDk0LjUyIDAgMTQ3LjE5IDIwLjgxIDE0Ny4xOSA1MC44OCAxMDcuNjcgODAuNyAxNDcuMTkgMTAxLjg5IDE0Ny4xOSA2MC45MSA5NC40NSA5OS43NSA0NC4xNCIvPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik04MDkuODIsOTMuNTdjLTQuMzYtMy45LTEwLjE5LTYuNS0xNy4zOC03Ljc1bDIzLjIxLTI4LjZ2LTEzLjA5aC02OS44NHYxNy40NWg0NC4xMWwtMjEuNjEsMjYuNnYxMy4zNmgxMC40N2M3LjcyLDAsMTMuMzQsMS4zOCwxNi43MSw0LjEsMy4yNSwyLjYxLDQuODMsNS45OSw0LjgzLDEwLjMxcy0xLjY1LDcuOTMtNS4wNSwxMC41NWMtMy41NiwyLjc0LTguNzMsNC4xMy0xNS4zNyw0LjEzLTUuNjIsMC0xMC45NS0uOTMtMTUuODMtMi43Ni00Ljg1LTEuODItOC44My00LjE3LTExLjgzLTYuOTlsLTIuNDItMi4yOC05LjIsMTUuNzksMS42MywxLjQ0YzQuMzYsMy44NSwxMCw2Ljk1LDE2Ljc4LDkuMTksNi43MywyLjIyLDEzLjc2LDMuMzUsMjAuODgsMy4zNSw4Ljc1LDAsMTYuMTItMS40MywyMS45Mi00LjI2LDUuOS0yLjg3LDEwLjM4LTYuODYsMTMuMzQtMTEuODYsMi45My00Ljk3LDQuNDItMTAuNSw0LjQyLTE2LjQ0LDAtOC45NC0zLjI4LTE2LjQyLTkuNzUtMjIuMjNaIi8+CiAgICAgIDxnPgogICAgICAgIDxwb2x5Z29uIGNsYXNzPSJjbHMtMSIgcG9pbnRzPSI4MTUuOTMgMTguMDEgODIxLjQ3IDE4LjAxIDgyMS40NyAzMi4xNSA4MjMuNzUgMzIuMTUgODIzLjc1IDE4LjAxIDgyOS4yOSAxOC4wMSA4MjkuMjkgMTYgODE1LjkzIDE2IDgxNS45MyAxOC4wMSIvPgogICAgICAgIDxwb2x5Z29uIGNsYXNzPSJjbHMtMSIgcG9pbnRzPSI4NDguOTkgMzIuMTUgODQ4Ljk3IDE2IDg0Ny4wOCAxNiA4NDAuNDMgMjcuMzQgODMzLjcgMTYgODMxLjggMTYgODMxLjggMzIuMTUgODM0LjAyIDMyLjE1IDgzNC4wMiAyMC40NCA4MzkuODYgMzAuMTkgODQwLjkyIDMwLjE5IDg0Ni43NiAyMC4zNyA4NDYuNzggMzIuMTUgODQ4Ljk5IDMyLjE1Ii8+CiAgICAgIDwvZz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==" alt="xcreativ3" /></span>
       </div>
-      <a href="#" class="pkg-cta" id="calcCta">Enquire with this selection</a>
-    </div>
-    <p class="calc-note">Prices are estimates and may be adjusted after a brief discussion of your requirements.</p>
+      <div class="nc-rail-presets">
+        <p class="nc-presets-label">Start from a package</p>
+        <div class="nc-presets" id="calcPresets"></div>
+      </div>
+      <div class="nc-summary" id="calcSummary">
+        <button type="button" class="nc-min" id="calcMin" aria-expanded="true" aria-label="Minimise total bar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div>
+          <p class="nc-total-label">Estimated total</p>
+          <p class="nc-total" id="calcTotal" aria-live="polite">R0</p>
+          <p class="nc-status" id="calcStatus"></p>
+        </div>
+        <a href="#" class="nc-cta" id="calcCta">Enquire with this selection</a>
+      </div>
+    </aside>
+    <main class="nc-main" id="pkgCalc">
+      <div class="nc-head">
+        <span class="nc-eyebrow">Package Builder</span>
+        <h3 class="nc-title" id="calcTitle">Explore &amp; <span>Build Your Package</span></h3>
+        <p class="nc-sub">Choose a curated package to see its full price and everything that&rsquo;s included, or customise any section to build your own. Your estimated total updates as you go.</p>
+      </div>
+      <div id="calcBody"></div>
+      <p class="nc-note">Prices are estimates and may be adjusted after a brief discussion of your requirements.</p>
+    </main>
   </div>
 </div>
 
 <script>
 // ── PACKAGE CALCULATOR ────────────────────────────────────────────────────
-// Edit prices here. Each preset (package) must add up to its package price —
+// Edit prices here. Each preset (package) must add up to its package price -
 // a console warning is logged if it doesn't.
 (function() {
   var root = document.getElementById('pkgCalc');
@@ -3966,6 +4123,9 @@ function closeMobileNav() {
 
   var state = normalize(clone(PACKAGES[2].pick)); // start on Signature
 
+  function iconHtml(k) {
+    return '<span class="calc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[k] + '</svg></span>';
+  }
   // ── Render ──
   var presetsEl = document.getElementById('calcPresets');
   var bodyEl = document.getElementById('calcBody');
@@ -3975,7 +4135,7 @@ function closeMobileNav() {
 
   PACKAGES.forEach(function(p) {
     var b = document.createElement('button');
-    b.type = 'button'; b.className = 'calc-preset'; b.dataset.pkg = p.id;
+    b.type = 'button'; b.className = 'nc-preset'; b.dataset.pkg = p.id;
     b.innerHTML = '<b>' + p.name + '</b><small>' + fmt(p.price) + '</small>';
     b.addEventListener('click', function() { state = normalize(clone(p.pick)); guideStash = null; sync(true); });
     presetsEl.appendChild(b);
@@ -3984,21 +4144,21 @@ function closeMobileNav() {
   var CUSTOM_START = { guideOn: false, animation: [], moodboard: 'mb', concepts: 'c2', variations: 'v2', foundation: 'f0',
     guidelines: [], colour: [], type: [], icons: 'i0', photo: 'p0', asset: 'a0', templates: 'm0' };
   var customBtn = document.createElement('button');
-  customBtn.type = 'button'; customBtn.className = 'calc-preset calc-preset-custom'; customBtn.dataset.pkg = 'custom';
+  customBtn.type = 'button'; customBtn.className = 'nc-preset nc-preset-custom'; customBtn.dataset.pkg = 'custom';
   customBtn.innerHTML = '<b>Custom</b><small>From ' + fmt(totalOf(normalize(clone(CUSTOM_START)))) + '</small>';
   customBtn.addEventListener('click', function() { state = normalize(clone(CUSTOM_START)); guideStash = null; sync(true); });
   presetsEl.appendChild(customBtn);
 
-  function iconHtml(k) {
-    return '<span class="calc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[k] + '</svg></span>';
+  function ncIconHtml(k) {
+    return '<span class="nc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[k] + '</svg></span>';
   }
   function buildOpts(s) {
     return s.options.map(function(o) {
-      return '<label class="calc-opt"><input type="' + (s.multi ? 'checkbox' : 'radio') + '" name="calc-' + s.id + '" value="' + o.id + '"' + (o.base ? ' data-base="1"' : '') + '>' +
-        '<span class="calc-opt-body"><span class="calc-radio' + (s.multi ? ' calc-check' : '') + '"></span>' +
-        '<span class="calc-opt-text"><span class="calc-opt-label">' + o.label + ((o.base || o.incl) ? '<span class="calc-opt-tag' + (o.incl ? ' always' : '') + '">Included</span>' : '') + '</span>' +
-        (o.detail ? '<span class="calc-opt-detail">' + o.detail + '</span>' : '') + '</span>' +
-        '<span class="calc-opt-price"></span></span></label>';
+      return '<label class="nc-opt"><input type="' + (s.multi ? 'checkbox' : 'radio') + '" name="nc-' + s.id + '" value="' + o.id + '"' + (o.base ? ' data-base="1"' : '') + '>' +
+        '<span class="nc-opt-body"><span class="nc-radio' + (s.multi ? ' nc-check' : '') + '"></span>' +
+        '<span class="nc-opt-text"><span class="nc-opt-label">' + o.label + ((o.base || o.incl) ? '<span class="nc-opt-tag' + (o.incl ? ' always' : '') + '">Included</span>' : '') + '</span>' +
+        (o.detail ? '<span class="nc-opt-detail">' + o.detail + '</span>' : '') + '</span>' +
+        '<span class="nc-opt-price"></span></span></label>';
     }).join('');
   }
   function toggleGuide(on) {
@@ -4017,7 +4177,7 @@ function closeMobileNav() {
   }
   function wire(card, s) {
     card.addEventListener('change', function(e) {
-      if (e.target.name !== 'calc-' + s.id) return;
+      if (e.target.name !== 'nc-' + s.id) return;
       if (s.multi && lookup[s.id][e.target.value].base) {
         setBase(state, e.target.checked); // the three essentials switch on/off together
       } else if (s.multi) {
@@ -4041,25 +4201,25 @@ function closeMobileNav() {
 
   GROUPS.forEach(function(g) {
     var title = document.createElement('p');
-    title.className = 'calc-group-title';
-    title.innerHTML = g.title + (g.note ? ' <span class="calc-group-note">&middot; ' + g.note + '</span>' : '');
+    title.className = 'nc-group-title';
+    title.innerHTML = g.title + (g.note ? ' <span class="nc-group-note">&middot; ' + g.note + '</span>' : '');
     var grid = document.createElement('div');
-    grid.className = 'calc-grid';
+    grid.className = 'nc-grid';
     if (g.merge) {
       // several sections shown together in one wide card (logo concepts + variations)
       var mcard = document.createElement('div');
-      mcard.className = 'calc-sec calc-sec-wide';
+      mcard.className = 'nc-sec nc-sec-wide';
       mcard.dataset.merged = g.sections.map(function(x) { return x.id; }).join(',');
       mcard.innerHTML =
-        '<div class="calc-sec-head">' + iconHtml(g.merge.icon) +
-        '<span class="calc-sec-name">' + g.merge.name + '<span class="calc-sec-hint">' + g.merge.hint + '</span></span>' +
-        '<span class="calc-sec-price" data-merged-price></span></div>' +
-        '<div class="calc-parts">' + (g.merge.columns || [g.sections.map(function(x) { return x.id; })]).map(function(col) {
-          return '<div class="calc-col">' + col.map(function(sid) {
+        '<div class="nc-sec-head">' + ncIconHtml(g.merge.icon) +
+        '<span class="nc-sec-name">' + g.merge.name + '<span class="nc-sec-hint">' + g.merge.hint + '</span></span>' +
+        '<span class="nc-sec-price" data-merged-price></span></div>' +
+        '<div class="nc-parts">' + (g.merge.columns || [g.sections.map(function(x) { return x.id; })]).map(function(col) {
+          return '<div class="nc-col">' + col.map(function(sid) {
             var x = g.sections.filter(function(y) { return y.id === sid; })[0];
             var idx = g.sections.indexOf(x);
-            return '<div class="calc-part" data-sec="' + x.id + '"><p class="calc-part-label"><span>' + (idx + 1) + '</span>' + x.name + (x.optional ? '<em class="calc-part-opt">optional</em>' : '') + '</p>' +
-              '<div class="calc-opts" role="' + (x.multi ? 'group' : 'radiogroup') + '" aria-label="' + x.name + '">' + buildOpts(x) + '</div></div>';
+            return '<div class="nc-part" data-sec="' + x.id + '"><p class="nc-part-label"><span>' + (idx + 1) + '</span>' + x.name + (x.optional ? '<em class="nc-part-opt">optional</em>' : '') + '</p>' +
+              '<div class="nc-opts" role="' + (x.multi ? 'group' : 'radiogroup') + '" aria-label="' + x.name + '">' + buildOpts(x) + '</div></div>';
           }).join('') + '</div>';
         }).join('') + '</div>';
       g.sections.forEach(function(x) { wire(mcard.querySelector('[data-sec="' + x.id + '"]'), x); });
@@ -4067,14 +4227,14 @@ function closeMobileNav() {
     } else {
       g.sections.forEach(function(sec) {
         var card = document.createElement('div');
-        card.className = 'calc-sec'; card.dataset.sec = sec.id;
+        card.className = 'nc-sec'; card.dataset.sec = sec.id;
         card.innerHTML =
-          '<div class="calc-sec-head">' + iconHtml(sec.id) +
-          '<span class="calc-sec-name">' + sec.name +
-          (sec.note ? '<span class="calc-sec-hint">' + sec.note + '</span>' : '') +
-          (sec.multi ? '<span class="calc-sec-hint">Select all that apply <button type="button" class="calc-all" data-all>Select all</button></span>' : '') +
-          '</span><span class="calc-sec-price" data-price></span></div>' +
-          '<div class="calc-opts" role="' + (sec.multi ? 'group' : 'radiogroup') + '" aria-label="' + sec.name + '">' + buildOpts(sec) + '</div>';
+          '<div class="nc-sec-head">' + ncIconHtml(sec.id) +
+          '<span class="nc-sec-name">' + sec.name +
+          (sec.note ? '<span class="nc-sec-hint">' + sec.note + '</span>' : '') +
+          (sec.multi ? '<span class="nc-sec-hint">Select all that apply <button type="button" class="nc-all" data-all>Select all</button></span>' : '') +
+          '</span><span class="nc-sec-price" data-price></span></div>' +
+          '<div class="nc-opts" role="' + (sec.multi ? 'group' : 'radiogroup') + '" aria-label="' + sec.name + '">' + buildOpts(sec) + '</div>';
         wire(card, sec);
         grid.appendChild(card);
       });
@@ -4083,13 +4243,12 @@ function closeMobileNav() {
     if (g.toggle) {
       var basePrice = Object.keys(BASE).reduce(function(t, sid) { return t + lookup[sid][BASE[sid]].price; }, 0);
       var tg = document.createElement('label');
-      tg.className = 'calc-guide-toggle';
-      tg.innerHTML = '<input type="checkbox" id="calcGuideToggle" role="switch"><span class="calc-switch"></span>' +
-        '<span class="calc-guide-text"><b>Include Brand Identity Guide</b><small>' + g.intro + '</small></span>' +
-        '<span class="calc-guide-price">Essentials ' + fmt(basePrice) + '</span>';
+      tg.className = 'nc-guide-toggle';
+      tg.innerHTML = '<input type="checkbox" id="calcGuideToggle" role="switch"><span class="nc-switch"></span>' +
+        '<span class="nc-guide-text"><b>Include Brand Identity Guide</b><small>' + g.intro + '</small><span class="nc-guide-price">Essentials ' + fmt(basePrice) + '</span></span>';
       tg.querySelector('input').addEventListener('change', function(e) { toggleGuide(e.target.checked); });
       bodyEl.appendChild(tg);
-    } else if (g.intro) { var intro = document.createElement('p'); intro.className = 'calc-group-intro'; intro.textContent = g.intro; bodyEl.appendChild(intro); }
+    } else if (g.intro) { var intro = document.createElement('p'); intro.className = 'nc-group-intro'; intro.textContent = g.intro; bodyEl.appendChild(intro); }
     bodyEl.appendChild(grid);
   });
 
@@ -4102,7 +4261,7 @@ function closeMobileNav() {
       card.querySelectorAll('input').forEach(function(i) {
         i.checked = s.multi ? state[s.id].indexOf(i.value) > -1 : i.value === state[s.id];
         var o = lookup[s.id][i.value];
-        var pr = i.closest('.calc-opt').querySelector('.calc-opt-price');
+        var pr = i.closest('.nc-opt').querySelector('.nc-opt-price');
         if (o.add) {
           // concept options show what they add on top of the base price
           pr.textContent = o.incl ? fmt(o.price) : '+' + fmt(o.price - s.options[0].price);
@@ -4111,10 +4270,10 @@ function closeMobileNav() {
           pr.textContent = o.locked ? '' : (pv ? fmt(pv) : '\u2013');
         }
         if (s.guide) i.disabled = !locked || !!i.dataset.base;
-        if (o.locked) { i.disabled = true; i.closest('.calc-opt').classList.add('calc-opt-locked', 'calc-opt-free'); }
-        if (i.dataset.base) i.closest('.calc-opt').classList.toggle('calc-opt-locked', locked), i.closest('.calc-opt').classList.toggle('calc-opt-free', locked);
+        if (o.locked) { i.disabled = true; i.closest('.nc-opt').classList.add('nc-opt-locked', 'nc-opt-free'); }
+        if (i.dataset.base) i.closest('.nc-opt').classList.toggle('nc-opt-locked', locked), i.closest('.nc-opt').classList.toggle('nc-opt-free', locked);
       });
-      card.classList.toggle('calc-sec-off', !!s.guide && !locked);
+      card.classList.toggle('nc-sec-off', !!s.guide && !locked);
       var ab = card.querySelector('[data-all]');
       if (ab) ab.disabled = !locked;
       if (ab) ab.textContent = state[s.id].length === s.options.length ? (locked && BASE[s.id] ? 'Clear extras' : 'Clear') : 'Select all';
@@ -4142,29 +4301,27 @@ function closeMobileNav() {
     totalEl.textContent = fmt(total);
 
     var hit = PACKAGES.filter(function(p) { return matches(state, p.pick); })[0];
-    presetsEl.querySelectorAll('.calc-preset').forEach(function(b) {
+    presetsEl.querySelectorAll('.nc-preset').forEach(function(b) {
       b.classList.toggle('active', hit ? b.dataset.pkg === hit.id : b.dataset.pkg === 'custom');
     });
 
     if (hit) {
-      statusEl.className = 'calc-status match';
+      statusEl.className = 'nc-status match';
       statusEl.textContent = 'Matches the ' + hit.name + ' package';
     } else {
       var near = PACKAGES.slice().sort(function(a, b) { return Math.abs(a.price - total) - Math.abs(b.price - total); })[0];
       var diff = total - near.price;
-      statusEl.className = 'calc-status';
-      statusEl.textContent = 'Custom build \u2014 ' + (diff === 0 ? 'same price as' : fmt(Math.abs(diff)) + (diff > 0 ? ' above' : ' below')) + ' the ' + near.name + ' package';
+      statusEl.className = 'nc-status';
+      statusEl.textContent = 'Custom build - ' + (diff === 0 ? 'same price as' : fmt(Math.abs(diff)) + (diff > 0 ? ' above' : ' below')) + ' the ' + near.name + ' package';
     }
 
     var lines = sections.map(function(s) {
       if (s.multi) {
         var names = state[s.id].map(function(x) { return lookup[s.id][x].label; });
-        var sv = priceOf(state, s.id);
-        return '- ' + s.name + ': ' + (names.length ? names.join(', ') + ' (' + fmt(sv) + ')' : 'Not included');
+        return '- ' + s.name + ': ' + (names.length ? names.join(', ') : 'Not included');
       }
       var o = lookup[s.id][state[s.id]];
-      var op = optPrice(state, s.id, o);
-      return '- ' + s.name + ': ' + o.label + (op ? ' (' + fmt(op) + ')' : '');
+      return '- ' + s.name + ': ' + o.label;
     });
     var subject = hit ? hit.name + ' Package Enquiry' : 'Custom Package Enquiry';
     var body = 'Hi Xander,\n\nI\'d like to enquire about the following package:\n\n' + lines.join('\n') + '\n\nEstimated total: ' + fmt(total) + '\n\nThanks!';
@@ -4478,18 +4635,18 @@ window.SmoothScrollOptions = {
     choose:{l:'Help me choose',k:['choose','recommend','which package','best for','not sure','suggest','budget'],
       t:'Which budget range is closest? These match the ranges on the enquiry form.',
       c:[{l:'Under R10,000',to:'r1'},{l:'R10,000 – R30,000',to:'r2'},{l:'R30,000 – R50,000',to:'r3'},{l:'R50,000+',to:'r4'}]},
-    r1:{t:'<b>Starter (R9,000)</b> fits this range: two logo marks plus a basic brand guide. If you only need a logo, the custom calculator starts lower.',c:['inc_starter','custom']},
+    r1:{t:'<b>Starter (R9,000)</b> fits this range: two logo marks plus a basic brand guide. If you only need a logo, the package builder starts lower.',c:['inc_starter','custom']},
     r2:{t:'<b>Brand Kit (R18,000)</b> or <b>Signature (R27,500)</b> fit here. Signature adds a fourth logo variation, more guide pages and one extra template, and is marked “Most Value” on the site.',c:['inc_brandkit','inc_signature']},
     r3:{t:'<b>Premium (R42,000)</b> fits here: the most complete package, with a brand foundation, full templates and a logo reveal animation.',c:['inc_premium','custom']},
     r4:{t:'<b>Premium (R42,000)</b> covers the full identity. For anything beyond it, such as motion graphics, social media or ongoing design support, a custom package can be scoped for you.',c:['inc_premium','services',{l:'Start an enquiry',a:'contact'}]},
     time:{k:['how long','timeline','lead time','turnaround','duration','weeks','days','week','process','steps','when will','deadline','fast','quick','how soon'],
-      t:'<b>The process has four steps</b><ul><li><b>Discover:</b> typically 1–2 days, starting once the 50% deposit has cleared</li><li><b>Define:</b> typically 1–2 weeks (moodboarding, concepts, final logo approval)</li><li><b>Design:</b> typically 1–2 weeks (full brand identity and a complete first draft)</li><li><b>Deliver:</b> typically 1–2 days (files prepared and delivered)</li></ul>Adding the steps together comes to roughly 2½ to 4½ weeks. Revisions happen within Define and Design.<small>Timelines are estimates and can change with feedback, approvals and project requirements.</small>',
+      t:'<b>The process has four steps</b><ul><li><b>Discover:</b> typically 1–2 days, starting once the 50% deposit has cleared and the onboarding form has been completed</li><li><b>Define:</b> typically 1–2 weeks (moodboarding, concepts, final logo approval)</li><li><b>Design:</b> typically 1–2 weeks (full brand identity and a complete first draft)</li><li><b>Deliver:</b> typically 1–2 days (files prepared and delivered)</li></ul>Allowing some buffer, the whole process comes to roughly 2-5 weeks. Revisions happen within Define and Design.<small>Timelines are estimates measured from the start of the moodboard phase, and extend if feedback, approvals or required information are delayed.</small>',
       c:['pay','rev','quote']},
     pay:{k:['pay','payment','deposit','invoice','instalment','installment','payment plan','balance','upfront','50%'],
-      t:'<ul><li>A <b>50% deposit</b> may be requested before work starts. It’s invoiced by email, and paying it means you accept the Terms of Service.</li><li>Invoices are due within <b>30 days</b>.</li><li>The remaining balance is invoiced before logo files or final exports are released, and delivery waits until it is paid in full.</li><li>Payment plans can be requested. They’re considered at the designer’s discretion and must be agreed in writing.</li></ul>'+TERMS_NOTE,
+      t:'<ul><li>A <b>50% deposit</b> will be requested before work starts. It’s invoiced by email, and paying it means you accept the Terms of Service.</li><li>Invoices are due within <b>30 days</b>.</li><li>The remaining balance is invoiced before logo files or final exports are released, and delivery waits until it is paid in full.</li><li>Payment plans can be requested. They’re considered at the designer’s discretion and must be agreed in writing.</li></ul>'+TERMS_NOTE,
       c:['time','backup','cancel','quote']},
     rev:{k:['revision','revisions','changes','amend','edit','tweak','feedback','rounds','not happy','don.t like'],
-      t:'<ul><li>The calculator lists <b>2 revisions per element</b> for logo development and the brand guide, and the Terms say each package includes a set number of rounds, as confirmed in your quote.</li><li>A revision is a minor adjustment (colour, typography, layout) to an existing concept. A completely new direction or a scope change isn’t covered.</li><li>Extra revisions are billed at <b>R800 per hour</b>.</li><li>Services outside logo and identity design usually don’t include formal revision rounds.</li></ul>'+TERMS_NOTE,
+      t:'<ul><li>The package builder lists <b>2 revisions per element</b> for logo development and the brand guide, and the Terms say each package includes a set number of rounds, as confirmed in your quote.</li><li>A revision is a minor adjustment (colour, typography, layout) to an existing concept. A completely new direction or a scope change isn’t covered.</li><li>Extra revisions are billed at <b>R800 per hour</b>.</li><li>Services outside logo and identity design usually don’t include formal revision rounds.</li></ul>'+TERMS_NOTE,
       c:['time','own','quote']},
     own:{k:['own','owner','ownership','copyright','rights','portfolio','nda','confidential','secret','stealth','who owns','usage'],
       t:'<ul><li>The final artwork and digital files become <b>yours once final payment is received in full</b>.</li><li>Sketches, preparation materials and unused ideas stay with Xander Menmuir (xcreativ3) and may be reused.</li><li>Finished work may be shown in the portfolio and promotions. If you need secrecy or an NDA, raise it before agreeing to the proposal.</li><li>You can modify the finished logo, at your own risk.</li></ul>'+TERMS_NOTE,
@@ -4507,11 +4664,11 @@ window.SmoothScrollOptions = {
       t:'<ul><li>If you cancel midway after ideas have been submitted, a refund of earlier payments isn’t possible. Depending on the work done and the budget, a portion may be returned at discretion.</li><li>If work can’t be completed due to illness or unforeseen circumstances, a portion of the budget is returned, in most cases the full amount.</li><li>A project can be suspended for reasons such as excessive micromanagement or reluctance to make final payment. Fair notice is given first.</li></ul>'+TERMS_NOTE,
       c:['pay','rev','quote']},
     services:{l:'Additional services',k:['service','graphic design','motion','social media','agency','freelance','extra','hourly','retainer','support'],
-      t:'<ul><li><b>Graphic design:</b> flexible support, booked in advance with a 5-hour minimum, usable within 1 month</li><li><b>Motion graphics:</b> animated logo reveals, brand transitions and motion assets</li><li><b>Agency support:</b> freelance capacity and specialist design for agencies</li><li><b>Social media:</b> content creation and design, provided through a monthly calendar for you to post</li></ul>Slots are limited. Pricing for these is shared on enquiry.',
+      t:'<ul><li><b>Graphic design:</b> flexible support, booked in advance with a 5-hour minimum, usable within 1 month (unused hours expire and are non-refundable)</li><li><b>Motion graphics:</b> animated logo reveals, brand transitions and motion assets</li><li><b>Agency support:</b> freelance capacity and specialist design for agencies</li><li><b>Social media:</b> content creation and design, provided through a monthly calendar for you to post</li></ul>Slots are limited. Pricing for these is shared on enquiry.',
       c:['custom',{l:'Enquire about a service',a:'contact'},'quote']},
-    custom:{l:'Build a custom package',k:['custom','calculator','build my own','tailor','pick and choose','only a logo','just a logo','logo only'],
-      t:'The calculator lets you build your own. A logo only (2 concepts and 2 logo variations) starts at <b>R5,000</b>, and the questionnaire and moodboard are included in every package. You can then add more concepts (up to 4), more logo variations (up to 4), a logo reveal animation (R5,000) and brand guide pieces such as colour, typography, icons, photography, assets and templates. Prices are estimates and may be adjusted after a brief discussion.',
-      c:[{l:'Open the calculator',a:'calc',go:1},'packages']},
+    custom:{l:'Build a custom package',k:['custom','calculator','builder','build my own','tailor','pick and choose','only a logo','just a logo','logo only'],
+      t:'The package builder lets you build your own. A logo only (2 concepts and 2 logo variations) starts at <b>R5,000</b>, and the questionnaire and moodboard are included in every package. You can then add more concepts (up to 4), more logo variations (up to 4), a logo reveal animation (R5,000) and brand guide pieces such as colour, typography, icons, photography, assets and templates. Prices are estimates and may be adjusted after a brief discussion.',
+      c:[{l:'Open the package builder',a:'calc',go:1},'packages']},
     privacy:{k:['privacy','popia','personal information','data','delete my'],
       t:'Enquiry details (name, email, optional phone, project type, budget and message) are used only to respond to your enquiry, under POPIA. You can ask for access, correction or deletion any time at xcreativ3@gmail.com, and requests are answered within 30 days.'+TERMS_NOTE,c:['quote']},
     who:{k:['who','xander','designer','experience','cape town','location','where are you','based'],
