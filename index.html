@@ -2385,7 +2385,13 @@ nav.scrolled {
 #incModal .nc-note { font-size: 0.68rem; color: var(--muted-dark); margin: 2rem 0 0; }
 #incModal #incBody { counter-reset: step; }
 #incModal .nc-eyebrow + .nc-title { margin-top: 0; }
-#incModal .inc-list { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.6rem 1.8rem; }
+#incModal .nc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 1.2rem 0 0.4rem; }
+#incModal .nc-sec { padding: 1.15rem 1.3rem 1.1rem; border: 1px solid var(--border-dark); border-radius: 22px; background: var(--card-dark); transition: border-color 0.3s; }
+#incModal .nc-sec:hover { border-color: rgba(180,0,13,0.45); }
+#incModal .nc-sec-head { margin-bottom: 0.85rem; }
+#incModal .inc-list { grid-template-columns: 1fr; gap: 0.5rem; }
+#incModal .nc-group-title { margin-top: 2.4rem; }
+#incModal .nc-head + #incGroups .nc-group-title:first-child { margin-top: 2.2rem; }
 #incModal .nc-summary .inc-ghost { display: block; width: 100%; margin-top: 0.6rem; text-align: center; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--white); background: transparent; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 0.9rem 1.4rem; cursor: pointer; transition: all 0.25s; }
 #incModal .nc-summary .inc-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.08); }
 @media (max-width: 900px) {
@@ -2402,6 +2408,7 @@ nav.scrolled {
   #incModal .nc-summary .nc-cta, #incModal .nc-summary .inc-ghost { margin-top: 0; flex: 1 1 200px; width: auto; }
 }
 @media (max-width: 700px) {
+  #incModal .nc-grid { grid-template-columns: 1fr; }
   #incModal .nc-summary { padding: 0.8rem 1rem; gap: 0.6rem; }
   #incModal .nc-summary > div { flex: 1 0 100%; display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; }
   #incModal .nc-total { font-size: 1.5rem; }
@@ -4449,11 +4456,7 @@ function closeMobileNav() {
     });
     var ebody = 'Hi Xander,\n\nI\'d like to enquire about the ' + pk.name + ' package:\n\n' + elines.join('\n') + '\n\nEstimated total: ' + fmt(totalOf(pk.pick)) + '\n\nThanks!';
     var brand = document.querySelector('#calcModal .nc-rail-top');
-    var presets = PACKAGES.map(function(x) {
-      return '<button type="button" class="nc-preset' + (x.id === pk.id ? ' active' : '') + '" data-inc-switch="' + x.id + '"><b>' + x.name + '</b><small>' + fmt(x.price) + '</small></button>';
-    }).join('');
     return (brand ? '<div class="nc-rail-top">' + brand.innerHTML + '</div>' : '') +
-      '<div class="nc-rail-presets"><p class="nc-presets-label">Packages</p><div class="nc-presets">' + presets + '</div></div>' +
       '<div class="nc-summary"><div><p class="nc-total-label">' + pk.name + ' package</p><p class="nc-total">' + fmt(pk.price) + '</p></div>' +
       '<a class="nc-cta" href="mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent(pk.name + ' Package Enquiry') + '&body=' + encodeURIComponent(ebody) + '">Enquire with this selection</a>' +
       '<button type="button" class="inc-ghost" data-open-calc data-pkg="' + pk.id + '">Customise this package</button></div>';
@@ -4508,15 +4511,6 @@ function closeMobileNav() {
   document.addEventListener('click', function(e) {
     if (e.target.closest('#incModal [data-open-calc]')) closeInc(false, true);
   }, true);
-  document.addEventListener('click', function(e) {
-    var sw = e.target.closest('[data-inc-switch]');
-    if (!sw) return;
-    var id = sw.dataset.incSwitch;
-    var b = document.querySelector('[data-open-inc="' + id + '"]');
-    var card = b && b.closest('.pkg-card');
-    var tag = card && card.querySelector('.pkg-tagline');
-    openInc(id, tag ? tag.textContent : '');
-  });
   incClose.addEventListener('click', function() { closeInc(); });
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && incModal.classList.contains('open')) closeInc();
