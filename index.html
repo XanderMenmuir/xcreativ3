@@ -2339,6 +2339,75 @@ nav.scrolled {
 /* prices are shown only in the left panel (packages + total); hidden on the building blocks */
 #calcModal .nc-sec-price, #calcModal .nc-opt-price, #calcModal .nc-guide-price { display: none !important; }
 @media (prefers-reduced-motion: reduce) { #calcModal * { transition: none !important; } }
+
+/* what's included popup, mirrors the builder layout */
+#incModal { --nc-line: rgba(255,255,255,0.09); --nc-tile: rgba(255,255,255,0.14); --nc-hot: #ff4d5a; }
+#incModal .nc-layout { display: grid; grid-template-columns: minmax(320px, 390px) minmax(0, 1fr); min-height: 100vh; font-family: 'Montserrat', sans-serif; color: var(--white); }
+#incModal .nc-rail { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: radial-gradient(circle at 0% 0%, rgba(180,0,13,0.28) 0%, transparent 55%), var(--off-black); border-right: 1px solid var(--border-dark); padding: 1.6rem 1.6rem 1.8rem; display: flex; flex-direction: column; gap: 1.6rem; }
+#incModal .nc-rail-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+#incModal .nc-brand { display: block; line-height: 0; }
+#incModal .nc-logo { height: 24px; width: auto; display: block; }
+#incModal .nc-presets-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-dark); margin-bottom: 0.8rem; }
+#incModal .nc-presets { display: grid; gap: 0.55rem; }
+#incModal .nc-preset { cursor: pointer; display: grid; grid-template-columns: 1fr auto; column-gap: 0.8rem; align-items: center; text-align: left; padding: 0.8rem 1.05rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.16); background: transparent; color: var(--white); font-family: 'Montserrat', sans-serif; transition: all 0.25s ease; }
+#incModal .nc-preset b { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
+#incModal .nc-preset small { font-size: 0.78rem; color: var(--muted-dark); font-weight: 600; transition: color 0.25s; }
+#incModal .nc-preset:hover { border-color: var(--white); }
+#incModal .nc-preset.active { background: var(--red); border-color: var(--red); }
+#incModal .nc-preset.active small { color: rgba(255,255,255,0.85); }
+#incModal .nc-preset:focus-visible { outline: 2px solid var(--nc-hot); outline-offset: 2px; }
+#incModal .nc-summary { margin-top: auto; position: relative; background: var(--card-dark); color: var(--white); border: 1px solid rgba(255,255,255,0.14); border-radius: 22px; padding: 1.3rem 1.4rem 1.4rem; box-shadow: 0 18px 44px rgba(0,0,0,0.6); }
+#incModal .nc-total-label { font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-dark); font-weight: 600; }
+#incModal .nc-total { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: var(--white); }
+#incModal .nc-status { font-size: 0.74rem; color: var(--muted-dark); margin-top: 0.2rem; line-height: 1.5; }
+#incModal .nc-status.match { color: #fff; }
+#incModal .nc-status.match::before { content: '\2713'; display: inline-grid; place-items: center; width: 16px; height: 16px; background: var(--red); border-radius: 50%; font-size: 0.55rem; margin-right: 0.45rem; vertical-align: 1px; }
+#incModal .nc-cta { display: block; margin-top: 1rem; text-align: center; text-decoration: none; cursor: pointer; padding: 0.95rem 1.4rem; border-radius: 999px; background: var(--red); border: 1px solid var(--red); color: var(--white); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; transition: background 0.25s, border-color 0.25s; }
+#incModal .nc-cta:hover { background: var(--red-dark); border-color: var(--red-dark); }
+#incModal .nc-cta:focus-visible { outline: 2px solid var(--nc-hot); outline-offset: 3px; }
+#incModal .nc-main { padding: 4.2rem clamp(1.5rem, 5vw, 4.5rem) 3rem; max-width: 980px; width: 100%; text-align: left; }
+#incModal .nc-head { margin-bottom: 1rem; }
+#incModal .nc-eyebrow { display: inline-block; font-size: 0.57rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.26rem 0.75rem; background: var(--red); color: var(--white); font-weight: 700; border-radius: 999px; margin-bottom: 1.1rem; }
+#incModal .nc-title { font-size: clamp(1.9rem, 4.5vw, 3rem); font-weight: 600; letter-spacing: -0.02em; color: var(--white); line-height: 1.12; margin-bottom: 0.9rem; }
+#incModal .nc-title span { color: inherit; }
+#incModal .nc-sub { font-size: 0.88rem; color: var(--muted-dark); line-height: 1.75; max-width: 620px; }
+#incModal .nc-group-title { counter-increment: step; display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: clamp(1.2rem, 2.6vw, 1.55rem); font-weight: 600; letter-spacing: -0.01em; color: var(--white); margin: 2.8rem 0 0.4rem; padding-bottom: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.22); }
+#incModal .nc-group-title::before { content: counter(step, decimal-leading-zero); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; color: var(--nc-hot); }
+#incModal .nc-group-note { font-weight: 500; color: var(--muted-dark); font-size: 0.72rem; letter-spacing: 0.04em; }
+#incModal .nc-group-intro { font-size: 0.8rem; color: var(--muted-dark); line-height: 1.7; margin: 0.8rem 0 0.4rem; max-width: 720px; }
+#incModal .nc-grid { display: block; margin-bottom: 0.5rem; }
+#incModal .nc-sec { padding: 1.6rem 0 1.5rem; border-bottom: 1px solid var(--nc-line); }
+#incModal .nc-sec-head { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+#incModal .nc-ico { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; background: rgba(180,0,13,0.18); color: var(--nc-hot); }
+#incModal .nc-ico svg { width: 18px; height: 18px; }
+#incModal .nc-sec-name { flex: 1; font-size: 0.95rem; font-weight: 600; color: var(--white); line-height: 1.25; }
+#incModal .nc-sec-hint { display: block; font-size: 0.7rem; font-weight: 400; color: var(--muted-dark); margin-top: 0.15rem; line-height: 1.5; }
+#incModal .nc-note { font-size: 0.68rem; color: var(--muted-dark); margin: 2rem 0 0; }
+#incModal #incBody { counter-reset: step; }
+#incModal .nc-eyebrow + .nc-title { margin-top: 0; }
+#incModal .inc-list { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.6rem 1.8rem; }
+#incModal .nc-summary .inc-ghost { display: block; width: 100%; margin-top: 0.6rem; text-align: center; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--white); background: transparent; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 0.9rem 1.4rem; cursor: pointer; transition: all 0.25s; }
+#incModal .nc-summary .inc-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.08); }
+@media (max-width: 900px) {
+  #incModal .nc-layout { display: flex; flex-direction: column; }
+  #incModal .nc-rail { display: contents; }
+  #incModal .nc-rail-top { order: 0; background: var(--off-black); border-bottom: 1px solid var(--border-dark); padding: 1rem 1.25rem; }
+  #incModal .nc-logo { height: 22px; }
+  #incModal .nc-tag { display: none; }
+  #incModal .nc-rail-presets { order: 2; padding: 1.2rem 1.25rem 0; }
+  #incModal .nc-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; padding-bottom: 0.6rem; }
+  #incModal .nc-preset { min-width: 0; padding: 0.7rem 0.85rem; column-gap: 0.5rem; }
+  #incModal .nc-main { order: 1; padding: 1.6rem 1.25rem 1.5rem; }
+  #incModal .nc-summary { order: 4; position: sticky; bottom: 0.75rem; z-index: 5; margin: 0 0.75rem 0.75rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.8rem 1.2rem; background: rgba(28,28,28,0.96); backdrop-filter: blur(10px); }
+  #incModal .nc-summary .nc-cta, #incModal .nc-summary .inc-ghost { margin-top: 0; flex: 1 1 200px; width: auto; }
+}
+@media (max-width: 700px) {
+  #incModal .nc-summary { padding: 0.8rem 1rem; gap: 0.6rem; }
+  #incModal .nc-summary > div { flex: 1 0 100%; display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; }
+  #incModal .nc-total { font-size: 1.5rem; }
+  #incModal .nc-summary .nc-cta, #incModal .nc-summary .inc-ghost { flex: 1 1 0; min-width: 0; padding: 0.7rem 0.6rem; font-size: 0.58rem; letter-spacing: 0.1em; }
+}
+@media (prefers-reduced-motion: reduce) { #incModal * { transition: none !important; } }
 </style>
 </head>
 <body>
@@ -3927,7 +3996,10 @@ function closeMobileNav() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
     Close
   </button>
-  <div class="pkg-calc" id="incBody"></div>
+  <div class="nc-layout">
+    <aside class="nc-rail" id="incRail"></aside>
+    <main class="nc-main" id="incBody"></main>
+  </div>
 </div>
 
 <!-- CUSTOM PACKAGE CALCULATOR MODAL -->
@@ -4347,21 +4419,24 @@ function closeMobileNav() {
     }).filter(Boolean);
   }
   function buildInc(pk, tagline) {
-    var html = '<div class="calc-head"><span class="calc-eyebrow">What&rsquo;s included</span>' +
-      '<h3 class="calc-title" id="incTitle">' + pk.name + ' <span>Package</span></h3>' +
-      (tagline ? '<p class="calc-sub">' + esc(tagline) + '</p>' : '') +
-      '<p class="inc-price">' + fmt(pk.price) + '</p></div>';
+    var html = '<div class="nc-head"><span class="nc-eyebrow">What&rsquo;s included</span>' +
+      '<h3 class="nc-title" id="incTitle">' + pk.name + ' <span>Package</span></h3>' +
+      (tagline ? '<p class="nc-sub">' + esc(tagline) + '</p>' : '') + '</div><div id="incGroups">';
     GROUPS.forEach(function(g, gi) {
       var cards = '';
       g.sections.forEach(function(sec) {
         var lines = incLines(pk, sec);
         if (!lines.length) return;
-        cards += '<div class="calc-sec"><div class="calc-sec-head">' + iconHtml(sec.id) + '<span class="calc-sec-name">' + sec.name + '</span></div>' +
+        cards += '<div class="nc-sec"><div class="nc-sec-head">' + ncIconHtml(sec.id) + '<span class="nc-sec-name">' + sec.name + '</span></div>' +
           '<ul class="inc-list">' + lines.map(function(l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ul></div>';
       });
       if (!cards) return;
-      html += '<p class="calc-group-title">' + (gi === 0 ? 'Logo Development' : HEADS[pk.id]) + ' <span class="calc-group-note">&middot; 2 x revision per element</span></p><div class="calc-grid">' + cards + '</div>';
+      html += '<p class="nc-group-title">' + (gi === 0 ? 'Logo Development' : HEADS[pk.id]) + ' <span class="nc-group-note">&middot; 2 x revision per element</span></p><div class="nc-grid">' + cards + '</div>';
     });
+    html += '</div><p class="nc-note">Prices are estimates and may be adjusted after a brief discussion of your requirements.</p>';
+    return html;
+  }
+  function buildIncRail(pk) {
     var elines = sections.map(function(s) {
       if (s.multi) {
         var names = pk.pick[s.id].map(function(x) { return lookup[s.id][x].label; });
@@ -4373,10 +4448,15 @@ function closeMobileNav() {
       return '- ' + s.name + ': ' + o.label + (op ? ' (' + fmt(op) + ')' : '');
     });
     var ebody = 'Hi Xander,\n\nI\'d like to enquire about the ' + pk.name + ' package:\n\n' + elines.join('\n') + '\n\nEstimated total: ' + fmt(totalOf(pk.pick)) + '\n\nThanks!';
-    html += '<div class="inc-foot"><a class="btn-primary" href="mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent(pk.name + ' Package Enquiry') + '&body=' + encodeURIComponent(ebody) + '">Enquire with this selection</a>' +
-      '<button type="button" class="inc-ghost" data-open-calc data-pkg="' + pk.id + '">Customise this package</button></div>' +
-      '<p class="calc-note">Prices are estimates and may be adjusted after a brief discussion of your requirements.</p>';
-    return html;
+    var brand = document.querySelector('#calcModal .nc-rail-top');
+    var presets = PACKAGES.map(function(x) {
+      return '<button type="button" class="nc-preset' + (x.id === pk.id ? ' active' : '') + '" data-inc-switch="' + x.id + '"><b>' + x.name + '</b><small>' + fmt(x.price) + '</small></button>';
+    }).join('');
+    return (brand ? '<div class="nc-rail-top">' + brand.innerHTML + '</div>' : '') +
+      '<div class="nc-rail-presets"><p class="nc-presets-label">Packages</p><div class="nc-presets">' + presets + '</div></div>' +
+      '<div class="nc-summary"><div><p class="nc-total-label">' + pk.name + ' package</p><p class="nc-total">' + fmt(pk.price) + '</p></div>' +
+      '<a class="nc-cta" href="mailto:xcreativ3@gmail.com?subject=' + encodeURIComponent(pk.name + ' Package Enquiry') + '&body=' + encodeURIComponent(ebody) + '">Enquire with this selection</a>' +
+      '<button type="button" class="inc-ghost" data-open-calc data-pkg="' + pk.id + '">Customise this package</button></div>';
   }
   var incModal = document.getElementById('incModal');
   var incBody = document.getElementById('incBody');
@@ -4397,13 +4477,15 @@ function closeMobileNav() {
   function openInc(id, tagline) {
     var pk = PACKAGES.filter(function(x) { return x.id === id; })[0];
     if (!pk) return;
-    incLastFocus = document.activeElement;
+    if (!incModal.classList.contains('open')) incLastFocus = document.activeElement;
     incBody.innerHTML = buildInc(pk, tagline);
+    document.getElementById('incRail').innerHTML = buildIncRail(pk);
     pushLayer();
     incModal.classList.add('open');
     incModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     incModal.scrollTop = 0;
+    if (incLastFocus !== document.activeElement) { }
     setTimeout(function() { incClose.focus({ preventScroll: true }); }, 60);
   }
   function closeInc(restore, keepHistory) {
@@ -4426,6 +4508,15 @@ function closeMobileNav() {
   document.addEventListener('click', function(e) {
     if (e.target.closest('#incModal [data-open-calc]')) closeInc(false, true);
   }, true);
+  document.addEventListener('click', function(e) {
+    var sw = e.target.closest('[data-inc-switch]');
+    if (!sw) return;
+    var id = sw.dataset.incSwitch;
+    var b = document.querySelector('[data-open-inc="' + id + '"]');
+    var card = b && b.closest('.pkg-card');
+    var tag = card && card.querySelector('.pkg-tagline');
+    openInc(id, tag ? tag.textContent : '');
+  });
   incClose.addEventListener('click', function() { closeInc(); });
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && incModal.classList.contains('open')) closeInc();
